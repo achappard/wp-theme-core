@@ -9,7 +9,10 @@ declare(strict_types=1);
 
 namespace Theme;
 
-use Theme\Contracts\FeatureInterface;
+use Theme\Providers\AdminServiceProvider;
+use Theme\Providers\FrontServiceProvider;
+use Theme\Providers\SeoServiceProvider;
+use Theme\Providers\SetupServiceProvider;
 use Timber\Timber;
 
 class Theme {
@@ -22,13 +25,6 @@ class Theme {
      * Domaine de traduction du thème
      */
     private static string $textdomain = 'mon-theme';
-
-    /**
-     * Liste des features enregistrées
-     *
-     * @var FeatureInterface[]
-     */
-    private array $features = [];
 
     /**
      * Constructeur privé pour le pattern Singleton
@@ -69,21 +65,23 @@ class Theme {
     }
 
     /**
-     * Charge toutes les features du thème
+     * Charge toutes les features du thème, groupées par provider
      *
-     * Ajouter ici les instanciations, groupées par catégorie :
-     * Setup, Front, Security, Blocks, PostTypes, Admin, Seo.
+     * L'ordre des providers fait foi : Setup initialise le thème, puis Front,
+     * Admin et Seo. Une feature s'ajoute dans le provider correspondant,
+     * jamais ici.
      */
     private function load_features(): void {
-        // Aucune feature enregistrée pour le moment.
-    }
+        $features = array_merge(
+            SetupServiceProvider::features(),
+            FrontServiceProvider::features(),
+            AdminServiceProvider::features(),
+            SeoServiceProvider::features(),
+        );
 
-    /**
-     * Enregistre une feature
-     */
-    private function register_feature( FeatureInterface $feature ): void {
-        $feature->register();
-        $this->features[] = $feature;
+        foreach ( $features as $feature ) {
+            $feature->register();
+        }
     }
 
     /**
