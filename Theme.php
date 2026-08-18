@@ -49,10 +49,23 @@ class Theme {
      * Initialise Timber
      */
     private function init_timber(): void {
-        Timber::$dirname    = [ 'resources/views' ];
-        Timber::$autoescape = false;
+        Timber::$dirname = [ 'resources/views' ];
 
+        add_filter( 'timber/twig/environment/options', [ $this, 'set_twig_options' ] );
         add_filter( 'timber/context', [ $this, 'add_twig_context' ] );
+    }
+
+    /**
+     * Configure l'environnement Twig
+     *
+     * Active l'échappement automatique (Timber le désactive par défaut) : toute
+     * sortie `{{ }}` est échappée sauf mention explicite `|raw`, réservée aux
+     * valeurs qui contiennent volontairement du HTML (post.content, post.excerpt…).
+     */
+    public function set_twig_options( array $options ): array {
+        $options['autoescape'] = 'html';
+
+        return $options;
     }
 
     /**
