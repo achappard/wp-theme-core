@@ -50,7 +50,7 @@ class Theme {
      */
     private function init_timber(): void {
         Timber::$dirname = [ 'resources/views' ];
-
+        Timber::init();
         add_filter( 'timber/twig/environment/options', [ $this, 'set_twig_options' ] );
         add_filter( 'timber/context', [ $this, 'add_twig_context' ] );
     }
