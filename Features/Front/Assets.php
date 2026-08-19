@@ -10,21 +10,19 @@ declare(strict_types=1);
 namespace Theme\Features\Front;
 
 use Theme\Contracts\FeatureInterface;
+use Theme\Support\ViteManifest;
 
 /**
  * Charge les assets CSS et JS du thème via Vite.
  *
  * En développement : se connecte au serveur Vite (HMR activé).
- * En production    : lit dist/assets/.vite/manifest.json pour résoudre les noms hachés.
+ * En production    : résout les noms hachés via le manifest (`Support\ViteManifest`).
  *
  * La détection du mode repose sur `dist/hot` :
  * - Présent → `npm run dev` est actif (fichier écrit par le plugin wordpressHot)
  * - Absent  → `npm run build` (le manifest est utilisé)
  */
 final class Assets implements FeatureInterface {
-
-    /** Répertoire de sortie de Vite, relatif à la racine du thème. */
-    private const DIST_DIR = '/dist/assets';
 
     /** Entrée JS du thème, telle que déclarée dans vite.config.js. */
     private const ENTRY = 'resources/js/app.js';
@@ -93,39 +91,25 @@ final class Assets implements FeatureInterface {
      * Vite extrait le CSS dans un fichier séparé avec un nom haché.
      */
     private function enqueue_production_assets(): void {
-        $manifest = $this->read_manifest();
-        $entry    = $manifest[ self::ENTRY ] ?? null;
+        $entry = ViteManifest::entry( self::ENTRY );
 
         if ( empty( $entry ) ) {
             return;
         }
 
-        $dist_url = get_template_directory_uri() . self::DIST_DIR;
-
         foreach ( $entry['css'] ?? [] as $css_file ) {
-            wp_enqueue_style( 'mon-theme-app', $dist_url . '/' . $css_file, [], null );
+            wp_enqueue_style( 'mon-theme-app', ViteManifest::asset_url( (string) $css_file ), [], null );
         }
 
         wp_enqueue_script(
             'mon-theme-app',
-            $dist_url . '/' . $entry['file'],
+            ViteManifest::asset_url( (string) $entry['file'] ),
             [],
             null,
             true
         );
 
         add_filter( 'script_loader_tag', [ $this, 'add_module_type' ], 10, 2 );
-    }
-
-    /** Lit et décode le manifest JSON généré par Vite. */
-    private function read_manifest(): array {
-        $path = get_template_directory() . self::DIST_DIR . '/.vite/manifest.json';
-
-        if ( ! file_exists( $path ) ) {
-            return [];
-        }
-
-        return json_decode( (string) file_get_contents( $path ), true ) ?? [];
     }
 
     /**

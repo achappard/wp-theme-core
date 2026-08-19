@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Theme\Features\Admin;
 
 use Theme\Contracts\FeatureInterface;
+use Theme\Support\ViteManifest;
 
 /**
  * Remplace le logo WordPress de la page de connexion par celui du thème.
@@ -21,9 +22,6 @@ use Theme\Contracts\FeatureInterface;
  * `Front\Assets` — présence de `dist/hot` pour arbitrer entre dev et production.
  */
 final class LoginLogo implements FeatureInterface {
-
-    /** Répertoire de sortie de Vite, relatif à la racine du thème. */
-    private const DIST_DIR = '/dist/assets';
 
     /** Entrée de la page de connexion, telle que déclarée dans vite.config.js. */
     private const ENTRY = 'resources/js/login.js';
@@ -79,29 +77,15 @@ final class LoginLogo implements FeatureInterface {
 
     /** Charge la feuille buildée, dont l'URL du logo a été réécrite par Vite. */
     private function enqueue_production_assets(): void {
-        $manifest = $this->read_manifest();
-        $entry    = $manifest[ self::ENTRY ] ?? null;
+        $entry = ViteManifest::entry( self::ENTRY );
 
         if ( empty( $entry ) ) {
             return;
         }
 
-        $dist_url = get_template_directory_uri() . self::DIST_DIR;
-
         foreach ( $entry['css'] ?? [] as $css_file ) {
-            wp_enqueue_style( 'mon-theme-login', $dist_url . '/' . $css_file, [], null );
+            wp_enqueue_style( 'mon-theme-login', ViteManifest::asset_url( (string) $css_file ), [], null );
         }
-    }
-
-    /** Lit et décode le manifest JSON généré par Vite. */
-    private function read_manifest(): array {
-        $path = get_template_directory() . self::DIST_DIR . '/.vite/manifest.json';
-
-        if ( ! file_exists( $path ) ) {
-            return [];
-        }
-
-        return json_decode( (string) file_get_contents( $path ), true ) ?? [];
     }
 
     /** Ajoute `type="module"` aux balises <script> des handles Vite. */
