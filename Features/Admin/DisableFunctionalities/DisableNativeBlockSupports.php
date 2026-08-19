@@ -1,4 +1,9 @@
 <?php
+/**
+ * Retrait des supports natifs des blocs du core
+ *
+ * @package Theme
+ */
 
 declare(strict_types=1);
 
@@ -18,7 +23,7 @@ use Theme\Contracts\FeatureInterface;
  * Ne retire que les supports déclarés par le core : un bloc ajouté à `BLOCKS`
  * sans support `color` ni `typography` est simplement laissé tel quel.
  */
-class DisableNativeBlockSupports implements FeatureInterface {
+final class DisableNativeBlockSupports implements FeatureInterface {
 
     /**
      * Blocs dont on supprime les supports couleur et typographie.
@@ -37,7 +42,7 @@ class DisableNativeBlockSupports implements FeatureInterface {
 
     /** Enregistre le filtre sur les arguments des types de blocs. */
     public function register(): void {
-        add_filter( 'register_block_type_args', [ $this, 'removeSupports' ], 10, 2 );
+        add_filter( 'register_block_type_args', [ $this, 'remove_supports' ], 10, 2 );
     }
 
     /**
@@ -47,7 +52,7 @@ class DisableNativeBlockSupports implements FeatureInterface {
      * @param string $block_type Slug du bloc (ex : core/heading).
      * @return array
      */
-    public function removeSupports( array $args, string $block_type ): array {
+    public function remove_supports( array $args, string $block_type ): array {
         if ( ! in_array( $block_type, self::BLOCKS, true ) ) {
             return $args;
         }

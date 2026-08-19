@@ -1,4 +1,9 @@
 <?php
+/**
+ * Restriction des blocs disponibles dans l'éditeur
+ *
+ * @package Theme
+ */
 
 declare(strict_types=1);
 
@@ -9,8 +14,7 @@ use WP_Block_Editor_Context;
 use WP_Block_Type_Registry;
 
 /** Restreint les blocs Gutenberg disponibles à une liste blanche de blocs autorisés. */
-class DisableBlocks implements FeatureInterface
-{
+final class DisableBlocks implements FeatureInterface {
 
     /**
      * Seuls ces blocs natifs sont accessibles dans l'éditeur.
@@ -30,12 +34,9 @@ class DisableBlocks implements FeatureInterface
 //        'core/button',
     ];
 
-    /**
-     * @inheritDoc
-     */
-    public function register(): void
-    {
-        add_filter( 'allowed_block_types_all', [ $this, 'allowedBlocks' ], 10, 2 );
+    /** Enregistre le filtre sur la liste des blocs autorisés. */
+    public function register(): void {
+        add_filter( 'allowed_block_types_all', [ $this, 'allowed_blocks' ], 10, 2 );
     }
 
     /**
@@ -45,8 +46,7 @@ class DisableBlocks implements FeatureInterface
      * @param WP_Block_Editor_Context $editor_context      Contexte de l'éditeur en cours.
      * @return string[]
      */
-    public function allowedBlocks( bool|array $allowed_block_types, WP_Block_Editor_Context $editor_context ): array
-    {
+    public function allowed_blocks( bool|array $allowed_block_types, WP_Block_Editor_Context $editor_context ): array {
         $theme_blocks = array_filter(
             array_keys( WP_Block_Type_Registry::get_instance()->get_all_registered() ),
             fn( string $block ) => str_starts_with( $block, 'mon-theme/' )

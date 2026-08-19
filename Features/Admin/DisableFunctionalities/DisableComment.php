@@ -1,4 +1,9 @@
 <?php
+/**
+ * Désactivation du système de commentaires
+ *
+ * @package Theme
+ */
 
 declare(strict_types=1);
 
@@ -7,44 +12,31 @@ namespace Theme\Features\Admin\DisableFunctionalities;
 use Theme\Contracts\FeatureInterface;
 use WP_Admin_Bar;
 
-/** Désactive intégralement le système de commentaires WordPress (front, admin, widgets, dashboard). */
-class DisableComment implements FeatureInterface
-{
+/** Désactive intégralement le système de commentaires (front, admin, widgets, tableau de bord). */
+final class DisableComment implements FeatureInterface {
 
-    /**
-     * @inheritDoc
-     */
-    public function register(): void
-    {
-        // Désactive le support des commentaires
+    /** Enregistre les hooks nécessaires à la désactivation des commentaires. */
+    public function register(): void {
+        // Support des commentaires côté administration.
         add_action( 'admin_init', [ $this, 'disable_comments_admin' ] );
         add_action( 'init', [ $this, 'disable_comments_post_types' ] );
 
-        // Ferme les commentaires sur le front-end
+        // Fermeture des commentaires côté front.
         add_filter( 'comments_open', '__return_false', 20, 2 );
         add_filter( 'pings_open', '__return_false', 20, 2 );
 
-        // Cache les commentaires existants
+        // Masquage des commentaires déjà enregistrés.
         add_filter( 'comments_array', '__return_empty_array', 10, 2 );
 
-        // Retire le menu des commentaires de l'admin
+        // Entrées d'interface : menu, barre d'administration, widget, tableau de bord.
         add_action( 'admin_menu', [ $this, 'remove_comments_menu' ] );
-
-        // Retire les commentaires de la barre d'administration
         add_action( 'admin_bar_menu', [ $this, 'remove_comments_admin_bar' ], 999 );
-
-        // Retire le widget des commentaires
         add_action( 'widgets_init', [ $this, 'disable_comments_widget' ] );
-
-        // Retire le support des commentaires du tableau de bord
         add_action( 'wp_dashboard_setup', [ $this, 'remove_dashboard_comments' ] );
     }
 
-    /**
-     * Désactive les commentaires dans l'administration
-     */
+    /** Redirige les pages de commentaires et retire les métaboxes associées. */
     public function disable_comments_admin(): void {
-        // Redirige toutes les tentatives d'accès à la page des commentaires
         global $pagenow;
 
         if ( in_array( $pagenow, [ 'edit-comments.php', 'options-discussion.php' ], true ) ) {
@@ -52,15 +44,12 @@ class DisableComment implements FeatureInterface
             exit;
         }
 
-        // Retire les métaboxes des commentaires
         remove_meta_box( 'commentstatusdiv', 'post', 'normal' );
         remove_meta_box( 'commentsdiv', 'post', 'normal' );
         remove_meta_box( 'trackbacksdiv', 'post', 'normal' );
     }
 
-    /**
-     * Désactive les commentaires pour tous les types de publication
-     */
+    /** Retire le support des commentaires et des rétroliens de tous les types de contenu. */
     public function disable_comments_post_types(): void {
         $post_types = get_post_types();
 
@@ -72,31 +61,27 @@ class DisableComment implements FeatureInterface
         }
     }
 
-    /**
-     * Retire le menu des commentaires et la page Réglages > Discussion de l'admin
-     */
+    /** Retire le menu Commentaires et la page Réglages > Discussion. */
     public function remove_comments_menu(): void {
         remove_menu_page( 'edit-comments.php' );
         remove_submenu_page( 'options-general.php', 'options-discussion.php' );
     }
 
     /**
-     * Retire les commentaires de la barre d'administration
+     * Retire les commentaires de la barre d'administration.
+     *
+     * @param WP_Admin_Bar $wp_admin_bar Barre d'administration en cours de construction.
      */
     public function remove_comments_admin_bar( WP_Admin_Bar $wp_admin_bar ): void {
         $wp_admin_bar->remove_node( 'comments' );
     }
 
-    /**
-     * Désactive le widget des commentaires
-     */
+    /** Désenregistre le widget des commentaires récents. */
     public function disable_comments_widget(): void {
         unregister_widget( 'WP_Widget_Recent_Comments' );
     }
 
-    /**
-     * Retire le widget des commentaires du tableau de bord
-     */
+    /** Retire le module Commentaires récents du tableau de bord. */
     public function remove_dashboard_comments(): void {
         remove_meta_box( 'dashboard_recent_comments', 'dashboard', 'normal' );
     }
