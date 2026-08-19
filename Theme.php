@@ -22,11 +22,6 @@ class Theme {
     private static ?Theme $instance = null;
 
     /**
-     * Domaine de traduction du thème
-     */
-    private static string $textdomain = 'mon-theme';
-
-    /**
      * Constructeur privé pour le pattern Singleton
      */
     private function __construct() {
@@ -52,7 +47,6 @@ class Theme {
         Timber::$dirname = [ 'resources/views' ];
         Timber::init();
         add_filter( 'timber/twig/environment/options', [ $this, 'set_twig_options' ] );
-        add_filter( 'timber/context', [ $this, 'add_twig_context' ] );
     }
 
     /**
@@ -66,15 +60,6 @@ class Theme {
         $options['autoescape'] = 'html';
 
         return $options;
-    }
-
-    /**
-     * Ajoute les données globales au contexte Twig
-     */
-    public function add_twig_context( array $context ): array {
-        $context['textdomain'] = self::$textdomain;
-
-        return $context;
     }
 
     /**
@@ -95,12 +80,5 @@ class Theme {
         foreach ( $features as $feature ) {
             $feature->register();
         }
-    }
-
-    /**
-     * Récupère le domaine de traduction du thème
-     */
-    public static function getTextdomain(): string {
-        return self::$textdomain;
     }
 }
