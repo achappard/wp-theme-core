@@ -11,6 +11,7 @@ namespace Theme;
 
 use Theme\Providers\AdminServiceProvider;
 use Theme\Providers\FrontServiceProvider;
+use Theme\Providers\SecurityServiceProvider;
 use Theme\Providers\SeoServiceProvider;
 use Theme\Providers\SetupServiceProvider;
 use Timber\Timber;
@@ -72,6 +73,7 @@ class Theme {
     private function load_features(): void {
         $features = array_merge(
             SetupServiceProvider::features(),
+            SecurityServiceProvider::features(),
             FrontServiceProvider::features(),
             AdminServiceProvider::features(),
             SeoServiceProvider::features(),
