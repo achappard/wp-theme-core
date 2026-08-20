@@ -19,7 +19,7 @@ namespace Theme\Support;
  * et la forme de ses entrées ne sont connus que d'un seul endroit.
  *
  * Le manifest est lu une fois par requête — il ne peut pas changer en cours de
- * route, et plusieurs features le consultent (`Front\Assets`, `Admin\LoginLogo`,
+ * route, et plusieurs features le consultent (`Front\Assets`, `Admin\LoginBranding`,
  * `Admin\AdminColorScheme`).
  */
 final class ViteManifest {

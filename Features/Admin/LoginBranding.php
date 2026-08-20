@@ -1,6 +1,6 @@
 <?php
 /**
- * Logo de la page de connexion
+ * Habillage de marque de la page de connexion
  *
  * @package Theme
  */
@@ -13,15 +13,22 @@ use Theme\Contracts\FeatureInterface;
 use Theme\Support\ViteManifest;
 
 /**
- * Remplace le logo WordPress de la page de connexion par celui du thème.
+ * Applique l'identité visuelle du thème à la page de connexion (wp-login.php).
  *
- * Le logo n'est pas référencé ici mais dans `resources/scss/login.scss`, ce qui
- * le fait entrer dans le graphe Vite : servi par le dev server en développement,
- * émis dans `dist/assets/` avec un nom haché au build. Cette classe se contente
- * donc de charger la feuille de la page de connexion, selon le même mécanisme que
- * `Front\Assets` — présence de `dist/hot` pour arbitrer entre dev et production.
+ * Deux volets. Côté PHP : le lien du logo pointe vers l'accueil et son texte reprend
+ * le nom du site. Côté CSS : `resources/scss/login.scss` remplace le logo WordPress et
+ * teinte les contrôles du formulaire (bouton, icône d'affichage du mot de passe, case
+ * « Se souvenir de moi ») à la couleur de marque `$base-color`, partagée avec le jeu de
+ * couleurs de l’admin, définie dans `_variables.scss` (`$brand_base-color`).
+ *
+ * Le logo et les couleurs ne sont pas référencés ici mais dans la feuille, ce qui les
+ * fait entrer dans le graphe Vite : servis par le dev server en développement, émis dans
+ * `dist/assets/` avec un nom haché au build. Cette classe se contente donc de charger la
+ * feuille, selon le même mécanisme que `Front\Assets` — présence de `dist/hot` pour
+ * arbitrer entre dev et production. Enfilée sur `login_enqueue_scripts`, elle couvre
+ * toutes les actions de wp-login.php, dont le formulaire « mot de passe oublié ».
  */
-final class LoginLogo implements FeatureInterface {
+final class LoginBranding implements FeatureInterface {
 
     /** Entrée de la page de connexion, telle que déclarée dans vite.config.js. */
     private const ENTRY = 'resources/js/login.js';
