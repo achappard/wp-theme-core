@@ -19,8 +19,8 @@ use WP_User;
  * Deux gestes complémentaires, tous deux sur `admin_init` :
  * le scheme du thème est ajouté à ceux de WordPress — il apparaît dans le
  * sélecteur « Jeu de couleurs de l'administration » de la page Profil et devient
- * le défaut des comptes créés ensuite — puis les schemes du core listés dans
- * `SCHEMES_TO_REMOVE` en sont retirés. Chaque utilisateur reste libre de choisir
+ * le défaut des comptes créés ensuite — puis les schemes du core passés en
+ * `$schemes_to_remove` en sont retirés. Chaque utilisateur reste libre de choisir
  * parmi ceux qui restent.
  *
  * La feuille est compilée par Vite depuis `resources/scss/admin-colors.scss`
@@ -34,29 +34,14 @@ use WP_User;
  */
 final class AdminColorScheme implements FeatureInterface {
 
-    /** Identifiant du scheme, stocké dans la meta utilisateur `admin_color`. */
-    private const SCHEME = 'mon-theme';
-
     /** Entrée CSS du scheme, telle que déclarée dans vite.config.js. */
-    private const ENTRY = 'resources/scss/admin-colors.scss';
+    private const DEFAULT_ENTRY = 'resources/scss/admin-colors.scss';
 
     /** Scheme retenu par WordPress pour les comptes qui n'ont rien choisi. */
     private const CORE_DEFAULT = 'modern';
 
     /**
-     * Applique le scheme aux nouveaux comptes, à la place de celui du core.
-     * Passer à `false` pour le proposer sans l'imposer à personne.
-     */
-    private const DEFAULT_FOR_NEW_USERS = true;
-
-    /**
-     * Aperçu affiché dans le sélecteur du profil (quatre pastilles).
-     * Reprend les variables de `resources/scss/admin-colors.scss`.
-     */
-    private const PALETTE = [ '#072e3e', '#0d4457', '#12718f', '#d1621f' ];
-
-    /**
-     * Jeux de couleurs du core retirés du sélecteur.
+     * Jeux de couleurs du core retirés du sélecteur, par défaut.
      *
      * Ne jamais y ajouter `modern` : le core en fait son filet de sécurité partout
      * où le scheme enregistré d'un utilisateur a disparu — feuille de styles
@@ -64,19 +49,34 @@ final class AdminColorScheme implements FeatureInterface {
      * et sélecteur du profil (`admin_color_scheme_picker()`) — et `CORE_DEFAULT`
      * ci-dessus s'appuie sur la même valeur.
      */
-    private const SCHEMES_TO_REMOVE = [ 'blue', 'sunrise', 'ectoplasm', 'ocean', 'light', 'coffee' ];
+    private const DEFAULT_SCHEMES_TO_REMOVE = [ 'blue', 'sunrise', 'ectoplasm', 'ocean', 'light', 'coffee' ];
 
     /**
-     * Couleurs des icônes du menu, transmises en JS par le core (`_wpColorScheme`)
-     * pour les icônes SVG des extensions. À garder alignées sur `$icon-color`.
+     * La palette et les couleurs d'icônes n'ont pas de valeur par défaut : elles
+     * décrivent la marque du projet. Les omettre doit échouer au démarrage plutôt
+     * que livrer un site aux couleurs d'un autre client.
+     *
+     * Elles doublent les variables SCSS de `resources/scss/admin-colors.scss`, que
+     * Sass ne peut pas exposer à PHP : les deux jeux de valeurs sont à modifier
+     * ensemble à l'étape charte d'un projet.
+     *
+     * @param string   $scheme                Identifiant du scheme, stocké dans la meta `admin_color`.
+     * @param string   $label                 Nom affiché dans le sélecteur du profil.
+     * @param string[] $palette               Aperçu du sélecteur (quatre pastilles).
+     * @param string[] $icon_colors           Couleurs des icônes du menu (`base`, `focus`, `current`),
+     *                                        transmises en JS par le core via `_wpColorScheme`.
+     * @param bool     $default_for_new_users Applique le scheme aux comptes créés ensuite.
+     * @param string[] $schemes_to_remove     Jeux de couleurs du core retirés du sélecteur.
+     * @param string   $entry                 Entrée CSS, telle que déclarée dans vite.config.js.
      */
-    private const ICON_COLORS = [
-        'base'    => '#a7bfc8',
-        'focus'   => '#fff',
-        'current' => '#fff',
-    ];
-
     public function __construct(
+        private readonly string $scheme,
+        private readonly string $label,
+        private readonly array $palette,
+        private readonly array $icon_colors,
+        private readonly bool $default_for_new_users = true,
+        private readonly array $schemes_to_remove = self::DEFAULT_SCHEMES_TO_REMOVE,
+        private readonly string $entry = self::DEFAULT_ENTRY,
         private readonly ViteManifest $manifest = new ViteManifest(),
     ) {}
 
@@ -87,7 +87,7 @@ final class AdminColorScheme implements FeatureInterface {
         add_action( 'admin_init', [ $this, 'register_scheme' ] );
         add_action( 'admin_init', [ $this, 'remove_core_schemes' ], 20 );
 
-        if ( self::DEFAULT_FOR_NEW_USERS ) {
+        if ( $this->default_for_new_users ) {
             add_filter( 'insert_user_meta', [ $this, 'set_default_for_new_user' ], 10, 3 );
         }
     }
@@ -99,19 +99,19 @@ final class AdminColorScheme implements FeatureInterface {
      * du sélecteur qu'une entrée pointant sur une feuille inexistante.
      */
     public function register_scheme(): void {
-        $url = $this->manifest->entry_url( self::ENTRY );
+        $url = $this->manifest->entry_url( $this->entry );
 
         if ( '' === $url ) {
             return;
         }
 
         wp_admin_css_color(
-            self::SCHEME,
+            $this->scheme,
             // Nom de marque : rien à traduire, contrairement aux libellés du core.
-            'Mon thème',
+            $this->label,
             $url,
-            self::PALETTE,
-            self::ICON_COLORS
+            $this->palette,
+            $this->icon_colors
         );
     }
 
@@ -136,7 +136,7 @@ final class AdminColorScheme implements FeatureInterface {
             return;
         }
 
-        foreach ( self::SCHEMES_TO_REMOVE as $scheme ) {
+        foreach ( $this->schemes_to_remove as $scheme ) {
             unset( $_wp_admin_css_colors[ $scheme ] );
         }
     }
@@ -160,7 +160,7 @@ final class AdminColorScheme implements FeatureInterface {
             return $meta;
         }
 
-        $meta['admin_color'] = self::SCHEME;
+        $meta['admin_color'] = $this->scheme;
 
         return $meta;
     }
