@@ -9,11 +9,8 @@ declare(strict_types=1);
 
 namespace Theme;
 
-use Theme\Providers\AdminServiceProvider;
-use Theme\Providers\FrontServiceProvider;
-use Theme\Providers\SecurityServiceProvider;
-use Theme\Providers\SeoServiceProvider;
-use Theme\Providers\SetupServiceProvider;
+use Theme\Contracts\ServiceProviderInterface;
+use InvalidArgumentException;
 use Timber\Timber;
 
 class Theme {
@@ -24,28 +21,51 @@ class Theme {
 
     /**
      * Constructeur privé pour le pattern Singleton
+     *
+     * @param ThemeContext           $context   Identité du thème.
+     * @param class-string<ServiceProviderInterface>[] $providers Providers, dans leur ordre de chargement.
      */
-    private function __construct() {
+    private function __construct(
+        private readonly ThemeContext $context,
+        private readonly array $providers,
+    ) {
         $this->init_timber();
         $this->load_features();
     }
 
     /**
-     * Récupère l'instance unique de la classe
+     * Démarre le thème
+     *
+     * L'ordre des providers est décidé par l'appelant (`functions.php`) et non ici :
+     * le thème fournit un catalogue de features, le projet choisit lesquelles il
+     * enregistre et dans quel ordre.
+     *
+     * @param ThemeContext $context   Identité du thème.
+     * @param class-string<ServiceProviderInterface>[] $providers Providers, dans leur ordre de chargement.
      */
-    public static function get_instance(): Theme {
-        if ( self::$instance === null ) {
-            self::$instance = new self();
-        }
+    public static function boot( ThemeContext $context, array $providers ): Theme {
+        return self::$instance ??= new self( $context, $providers );
+    }
 
+    /**
+     * Récupère l'instance du thème, ou null s'il n'a pas encore démarré
+     */
+    public static function get_instance(): ?Theme {
         return self::$instance;
+    }
+
+    /**
+     * Identité du thème
+     */
+    public function context(): ThemeContext {
+        return $this->context;
     }
 
     /**
      * Initialise Timber
      */
     private function init_timber(): void {
-        Timber::$dirname = [ 'resources/views' ];
+        Timber::$dirname = $this->context->view_paths;
         Timber::init();
         add_filter( 'timber/twig/environment/options', [ $this, 'set_twig_options' ] );
     }
@@ -64,23 +84,26 @@ class Theme {
     }
 
     /**
-     * Charge toutes les features du thème, groupées par provider
+     * Charge toutes les features du thème, provider par provider
      *
-     * L'ordre des providers fait foi : Setup initialise le thème, puis Front,
-     * Admin et Seo. Une feature s'ajoute dans le provider correspondant,
-     * jamais ici.
+     * L'ordre reçu fait foi, à l'intérieur d'un provider comme entre providers.
+     * Une feature s'ajoute dans le provider correspondant à son domaine, jamais ici.
+     *
+     * @throws InvalidArgumentException Si un provider n'honore pas le contrat — mieux
+     *                                  vaut une erreur nette au démarrage qu'un appel
+     *                                  statique sur une classe inattendue.
      */
     private function load_features(): void {
-        $features = array_merge(
-            SetupServiceProvider::features(),
-            SecurityServiceProvider::features(),
-            FrontServiceProvider::features(),
-            AdminServiceProvider::features(),
-            SeoServiceProvider::features(),
-        );
+        foreach ( $this->providers as $provider ) {
+            if ( ! is_subclass_of( $provider, ServiceProviderInterface::class, true ) ) {
+                throw new InvalidArgumentException(
+                    sprintf( '%s n\'implémente pas ServiceProviderInterface.', (string) $provider )
+                );
+            }
 
-        foreach ( $features as $feature ) {
-            $feature->register();
+            foreach ( $provider::features( $this->context ) as $feature ) {
+                $feature->register();
+            }
         }
     }
 }
