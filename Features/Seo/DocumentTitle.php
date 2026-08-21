@@ -2,14 +2,14 @@
 /**
  * Composition du titre du document
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Seo;
+namespace Deefuse\ThemeCore\Features\Seo;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /**
  * Point d'entrée unique pour façonner le `<title>` du site.

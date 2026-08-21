@@ -2,14 +2,14 @@
 /**
  * Support des fichiers SVG dans la médiathèque
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin;
+namespace Deefuse\ThemeCore\Features\Admin;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 use DOMComment;
 use DOMDocument;
 use DOMDocumentType;

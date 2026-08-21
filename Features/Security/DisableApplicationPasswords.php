@@ -2,14 +2,14 @@
 /**
  * Désactivation des mots de passe d'application
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Security;
+namespace Deefuse\ThemeCore\Features\Security;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /**
  * Désactive entièrement les mots de passe d'application.

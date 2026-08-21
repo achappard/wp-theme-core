@@ -2,14 +2,14 @@
 /**
  * Supports de thème déclarés auprès de WordPress
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Setup;
+namespace Deefuse\ThemeCore\Features\Setup;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /**
  * Déclare les fonctionnalités WordPress prises en charge par le thème.

@@ -2,14 +2,14 @@
 /**
  * Nettoyage des modules par défaut du tableau de bord
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin\DisableFunctionalities;
+namespace Deefuse\ThemeCore\Features\Admin\DisableFunctionalities;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /** Supprime les modules inutiles du tableau de bord pour simplifier l'interface d'administration. */
 final class DisableDefaultDashboardWidgets implements FeatureInterface {

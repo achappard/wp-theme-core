@@ -2,14 +2,14 @@
 /**
  * Désactivation de la barre d'administration
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin\DisableFunctionalities;
+namespace Deefuse\ThemeCore\Features\Admin\DisableFunctionalities;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 use WP_Admin_Bar;
 
 /** Masque la barre d'administration côté front et supprime le logo WP dans l'admin. */

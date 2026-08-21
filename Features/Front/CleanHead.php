@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Theme\Features\Front;
+namespace Deefuse\ThemeCore\Features\Front;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /**
  * Supprime les balises inutiles ou sensibles injectées par WordPress dans le <head>.

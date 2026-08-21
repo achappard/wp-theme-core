@@ -2,14 +2,14 @@
 /**
  * Masquage de l'icône du site dans les réglages
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin\DisableFunctionalities;
+namespace Deefuse\ThemeCore\Features\Admin\DisableFunctionalities;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /** Masque la section « Icône du site » de la page Réglages > Général, inutile pour un site vitrine. */
 final class DisableSiteIcon implements FeatureInterface {

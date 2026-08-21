@@ -2,12 +2,12 @@
 /**
  * Identité du thème, transmise aux providers
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme;
+namespace Deefuse\ThemeCore;
 
 /**
  * Porte les quelques valeurs qui changent d'un projet à l'autre.

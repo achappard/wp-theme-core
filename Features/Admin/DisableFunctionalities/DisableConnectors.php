@@ -2,14 +2,14 @@
 /**
  * Désactivation de la page Connectors
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin\DisableFunctionalities;
+namespace Deefuse\ThemeCore\Features\Admin\DisableFunctionalities;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /**
  * Retire la page « Connectors » (Réglages → Connectors), apparue en WordPress 7.0.

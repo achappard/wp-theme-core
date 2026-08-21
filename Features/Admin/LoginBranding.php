@@ -2,17 +2,17 @@
 /**
  * Habillage de marque de la page de connexion
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin;
+namespace Deefuse\ThemeCore\Features\Admin;
 
-use Theme\Contracts\FeatureInterface;
-use Theme\Support\ViteDevServer;
-use Theme\Support\ViteManifest;
-use Theme\ThemeContext;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Support\ViteDevServer;
+use Deefuse\ThemeCore\Support\ViteManifest;
+use Deefuse\ThemeCore\ThemeContext;
 
 /**
  * Applique l'identité visuelle du thème à la page de connexion (wp-login.php).

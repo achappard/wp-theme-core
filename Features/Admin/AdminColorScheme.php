@@ -2,15 +2,15 @@
 /**
  * Jeu de couleurs de l'administration
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin;
+namespace Deefuse\ThemeCore\Features\Admin;
 
-use Theme\Contracts\FeatureInterface;
-use Theme\Support\ViteManifest;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Support\ViteManifest;
 use WP_User;
 
 /**

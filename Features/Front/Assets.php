@@ -2,17 +2,17 @@
 /**
  * Chargement des assets front-end
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Front;
+namespace Deefuse\ThemeCore\Features\Front;
 
-use Theme\Contracts\FeatureInterface;
-use Theme\Support\ViteDevServer;
-use Theme\Support\ViteManifest;
-use Theme\ThemeContext;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Support\ViteDevServer;
+use Deefuse\ThemeCore\Support\ViteManifest;
+use Deefuse\ThemeCore\ThemeContext;
 
 /**
  * Charge les assets CSS et JS du thème via Vite.

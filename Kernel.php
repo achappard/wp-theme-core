@@ -1,23 +1,23 @@
 <?php
 /**
- * Classe principale du thème
+ * Noyau du thème : initialisation de Timber et chargement des providers
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme;
+namespace Deefuse\ThemeCore;
 
-use Theme\Contracts\ServiceProviderInterface;
+use Deefuse\ThemeCore\Contracts\ServiceProviderInterface;
 use InvalidArgumentException;
 use Timber\Timber;
 
-class Theme {
+class Kernel {
     /**
      * Instance unique de la classe
      */
-    private static ?Theme $instance = null;
+    private static ?Kernel $instance = null;
 
     /**
      * Constructeur privé pour le pattern Singleton
@@ -43,14 +43,14 @@ class Theme {
      * @param ThemeContext $context   Identité du thème.
      * @param class-string<ServiceProviderInterface>[] $providers Providers, dans leur ordre de chargement.
      */
-    public static function boot( ThemeContext $context, array $providers ): Theme {
+    public static function boot( ThemeContext $context, array $providers ): Kernel {
         return self::$instance ??= new self( $context, $providers );
     }
 
     /**
      * Récupère l'instance du thème, ou null s'il n'a pas encore démarré
      */
-    public static function get_instance(): ?Theme {
+    public static function get_instance(): ?Kernel {
         return self::$instance;
     }
 

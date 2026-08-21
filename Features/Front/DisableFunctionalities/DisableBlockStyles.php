@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Theme\Features\Front\DisableFunctionalities;
+namespace Deefuse\ThemeCore\Features\Front\DisableFunctionalities;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /**
  * Supprime les feuilles de styles Gutenberg inutiles côté front-end.

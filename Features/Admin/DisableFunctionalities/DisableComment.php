@@ -2,14 +2,14 @@
 /**
  * Désactivation du système de commentaires
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin\DisableFunctionalities;
+namespace Deefuse\ThemeCore\Features\Admin\DisableFunctionalities;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 use WP_Admin_Bar;
 use WP_REST_Response;
 

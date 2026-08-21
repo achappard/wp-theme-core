@@ -2,14 +2,14 @@
 /**
  * Blocage de l'énumération des comptes utilisateurs
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Security;
+namespace Deefuse\ThemeCore\Features\Security;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 use WP_REST_Response;
 
 /**

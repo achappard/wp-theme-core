@@ -2,14 +2,14 @@
 /**
  * Contrat pour tous les providers du thème
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Contracts;
+namespace Deefuse\ThemeCore\Contracts;
 
-use Theme\ThemeContext;
+use Deefuse\ThemeCore\ThemeContext;
 
 interface ServiceProviderInterface {
     /**

@@ -2,14 +2,14 @@
 /**
  * Désactivation des mises à jour automatiques
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin\DisableFunctionalities;
+namespace Deefuse\ThemeCore\Features\Admin\DisableFunctionalities;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /** Désactive toutes les mises à jour automatiques WordPress (core, extensions, thèmes, traductions). */
 final class DisableUpdates implements FeatureInterface {

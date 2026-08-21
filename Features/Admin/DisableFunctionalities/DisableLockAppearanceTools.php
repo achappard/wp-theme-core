@@ -2,14 +2,14 @@
 /**
  * Verrouillage des outils de personnalisation visuelle
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin\DisableFunctionalities;
+namespace Deefuse\ThemeCore\Features\Admin\DisableFunctionalities;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /** Bloque l'accès aux outils de personnalisation visuelle : Personnaliser, Éditeur de site et Polices. */
 final class DisableLockAppearanceTools implements FeatureInterface {

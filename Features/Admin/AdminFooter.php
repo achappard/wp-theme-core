@@ -2,14 +2,14 @@
 /**
  * Pied de page de l'administration
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin;
+namespace Deefuse\ThemeCore\Features\Admin;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /** Remplace le texte du pied de page de l'administration par les crédits de l'agence. */
 final class AdminFooter implements FeatureInterface {

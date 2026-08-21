@@ -2,12 +2,12 @@
 /**
  * Lecture du manifest Vite
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Support;
+namespace Deefuse\ThemeCore\Support;
 
 /**
  * Résout les noms de fichiers hachés produits par `npm run build`.

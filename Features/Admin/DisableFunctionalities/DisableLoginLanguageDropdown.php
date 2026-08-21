@@ -2,14 +2,14 @@
 /**
  * Suppression du sélecteur de langue au login
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Features\Admin\DisableFunctionalities;
+namespace Deefuse\ThemeCore\Features\Admin\DisableFunctionalities;
 
-use Theme\Contracts\FeatureInterface;
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 
 /** Supprime le sélecteur de langue sur la page de connexion WordPress. */
 final class DisableLoginLanguageDropdown implements FeatureInterface {

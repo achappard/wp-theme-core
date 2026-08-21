@@ -2,12 +2,12 @@
 /**
  * Dialogue avec le serveur de développement Vite
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Support;
+namespace Deefuse\ThemeCore\Support;
 
 /**
  * Arbitre entre développement et production, et sert les assets en ES modules.

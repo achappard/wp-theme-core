@@ -2,12 +2,12 @@
 /**
  * Contrat pour toutes les features du thème
  *
- * @package Theme
+ * @package Deefuse\ThemeCore
  */
 
 declare(strict_types=1);
 
-namespace Theme\Contracts;
+namespace Deefuse\ThemeCore\Contracts;
 
 interface FeatureInterface {
     /**
