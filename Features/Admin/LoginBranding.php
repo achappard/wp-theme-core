@@ -12,6 +12,7 @@ namespace Theme\Features\Admin;
 use Theme\Contracts\FeatureInterface;
 use Theme\Support\ViteDevServer;
 use Theme\Support\ViteManifest;
+use Theme\ThemeContext;
 
 /**
  * Applique l'identité visuelle du thème à la page de connexion (wp-login.php).
@@ -34,13 +35,16 @@ final class LoginBranding implements FeatureInterface {
     /** Entrée de la page de connexion, telle que déclarée dans vite.config.js. */
     private const ENTRY = 'resources/js/login.js';
 
-    /** Handles WordPress des scripts Vite (pour le filtre type="module"). */
-    private const SCRIPT_HANDLES = [ 'vite-client-login', 'mon-theme-login' ];
-
     public function __construct(
+        private readonly ThemeContext $context,
         private readonly ViteDevServer $dev_server = new ViteDevServer(),
         private readonly ViteManifest $manifest = new ViteManifest(),
     ) {}
+
+    /** Handles WordPress des scripts Vite (pour le filtre type="module"). */
+    private function script_handles(): array {
+        return [ $this->context->handle( 'vite-client-login' ), $this->context->handle( 'login' ) ];
+    }
 
     /** Enregistre les hooks de personnalisation de la page de connexion. */
     public function register(): void {
@@ -65,12 +69,13 @@ final class LoginBranding implements FeatureInterface {
      * en développement, et le logo est servi directement par Vite.
      */
     private function enqueue_dev_assets(): void {
-        $base = $this->dev_server->url();
+        $base   = $this->dev_server->url();
+        $client = $this->context->handle( 'vite-client-login' );
 
-        wp_enqueue_script( 'vite-client-login', $base . '/@vite/client', [], null, false );
-        wp_enqueue_script( 'mon-theme-login', $base . '/' . self::ENTRY, [ 'vite-client-login' ], null, true );
+        wp_enqueue_script( $client, $base . '/@vite/client', [], null, false );
+        wp_enqueue_script( $this->context->handle( 'login' ), $base . '/' . self::ENTRY, [ $client ], null, true );
 
-        $this->dev_server->serve_as_modules( self::SCRIPT_HANDLES );
+        $this->dev_server->serve_as_modules( $this->script_handles() );
     }
 
     /** Charge la feuille buildée, dont l'URL du logo a été réécrite par Vite. */
@@ -82,7 +87,7 @@ final class LoginBranding implements FeatureInterface {
         }
 
         foreach ( $entry['css'] ?? [] as $css_file ) {
-            wp_enqueue_style( 'mon-theme-login', $this->manifest->asset_url( (string) $css_file ), [], null );
+            wp_enqueue_style( $this->context->handle( 'login' ), $this->manifest->asset_url( (string) $css_file ), [], null );
         }
     }
 

@@ -12,6 +12,7 @@ namespace Theme\Features\Front;
 use Theme\Contracts\FeatureInterface;
 use Theme\Support\ViteDevServer;
 use Theme\Support\ViteManifest;
+use Theme\ThemeContext;
 
 /**
  * Charge les assets CSS et JS du thème via Vite.
@@ -27,13 +28,16 @@ final class Assets implements FeatureInterface {
     /** Entrée JS du thème, telle que déclarée dans vite.config.js. */
     private const ENTRY = 'resources/js/app.js';
 
-    /** Handles WordPress des scripts Vite (pour le filtre type="module"). */
-    private const SCRIPT_HANDLES = [ 'vite-client', 'mon-theme-app' ];
-
     public function __construct(
+        private readonly ThemeContext $context,
         private readonly ViteDevServer $dev_server = new ViteDevServer(),
         private readonly ViteManifest $manifest = new ViteManifest(),
     ) {}
+
+    /** Handles WordPress des scripts Vite (pour le filtre type="module"). */
+    private function script_handles(): array {
+        return [ $this->context->handle( 'vite-client' ), $this->context->handle( 'app' ) ];
+    }
 
     /** Enregistre le hook d'enfilement des assets. */
     public function register(): void {
@@ -54,10 +58,11 @@ final class Assets implements FeatureInterface {
      * Le client Vite gère le HMR (Hot Module Replacement) automatiquement.
      */
     private function enqueue_dev_assets(): void {
-        $base = $this->dev_server->url();
+        $base   = $this->dev_server->url();
+        $client = $this->context->handle( 'vite-client' );
 
         wp_enqueue_script(
-            'vite-client',
+            $client,
             $base . '/@vite/client',
             [],
             null,
@@ -66,14 +71,14 @@ final class Assets implements FeatureInterface {
 
         // Le fichier JS importe le SCSS — Vite l'injecte dynamiquement en dev.
         wp_enqueue_script(
-            'mon-theme-app',
+            $this->context->handle( 'app' ),
             $base . '/' . self::ENTRY,
-            [ 'vite-client' ],
+            [ $client ],
             null,
             true
         );
 
-        $this->dev_server->serve_as_modules( self::SCRIPT_HANDLES );
+        $this->dev_server->serve_as_modules( $this->script_handles() );
     }
 
     /**
@@ -88,17 +93,17 @@ final class Assets implements FeatureInterface {
         }
 
         foreach ( $entry['css'] ?? [] as $css_file ) {
-            wp_enqueue_style( 'mon-theme-app', $this->manifest->asset_url( (string) $css_file ), [], null );
+            wp_enqueue_style( $this->context->handle( 'app' ), $this->manifest->asset_url( (string) $css_file ), [], null );
         }
 
         wp_enqueue_script(
-            'mon-theme-app',
+            $this->context->handle( 'app' ),
             $this->manifest->asset_url( (string) $entry['file'] ),
             [],
             null,
             true
         );
 
-        $this->dev_server->serve_as_modules( self::SCRIPT_HANDLES );
+        $this->dev_server->serve_as_modules( $this->script_handles() );
     }
 }
