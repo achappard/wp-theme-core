@@ -1,0 +1,17 @@
+# Dépendances Composer
+/vendor/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+
+# Logs
+*.log
+
+# ⚠️ languages/ n'est PAS ignoré, contrairement à un thème.
+# L'installation d'un package Composer ne déclenche aucune étape de build : les
+# .mo et .l10n.php doivent être commités et présents dans le tag, sinon tous les
+# projets qui dépendent de ce package perdent les traductions du socle, sans
+# la moindre erreur. Ne jamais ajouter languages/*.mo ici.

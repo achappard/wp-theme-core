@@ -1,0 +1,28 @@
+{
+    "name": "deefuse/wp-theme-core",
+    "description": "Socle réutilisable des thèmes WordPress Deefuse : noyau Timber, contrats de features et features génériques.",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Aurélien Chappard",
+            "email": "aurelien.chappard@deefuse.fr"
+        }
+    ],
+    "require": {
+        "php": ">=8.5",
+        "timber/timber": "^2.3"
+    },
+    "require-dev": {
+        "wp-cli/i18n-command": "^2.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Deefuse\\ThemeCore\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable"
+}

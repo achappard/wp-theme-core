@@ -65,7 +65,7 @@ class Kernel {
      * `.l10n.php`, est la seule façon d'être correct dans les deux cas.
      */
     private function init_core_translations(): void {
-        $path = __DIR__ . '/languages';
+        $path = dirname( __DIR__ ) . '/languages';
 
         add_action(
             'after_setup_theme',
