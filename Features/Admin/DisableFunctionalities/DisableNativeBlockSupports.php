@@ -20,17 +20,17 @@ use Theme\Contracts\FeatureInterface;
  * sur lesquels les feuilles du thème n'ont pas la main, et que Bootstrap ne
  * connaît pas. L'éditeur n'expose donc que ce que le thème sait rendre.
  *
- * Ne retire que les supports déclarés par le core : un bloc ajouté à `BLOCKS`
+ * Ne retire que les supports déclarés par le core : un bloc ajouté à `$blocks`
  * sans support `color` ni `typography` est simplement laissé tel quel.
  */
 final class DisableNativeBlockSupports implements FeatureInterface {
 
     /**
-     * Blocs dont on supprime les supports couleur et typographie.
+     * Blocs dont on supprime les supports couleur et typographie, par défaut.
      *
      * @var string[]
      */
-    private const BLOCKS = [
+    private const DEFAULT_BLOCKS = [
         'core/heading',
         'core/list',
         'core/list-item',
@@ -39,6 +39,13 @@ final class DisableNativeBlockSupports implements FeatureInterface {
         'core/buttons',
         'core/button',
     ];
+
+    /**
+     * @param string[] $blocks Blocs dont on supprime les supports couleur et typographie.
+     */
+    public function __construct(
+        private readonly array $blocks = self::DEFAULT_BLOCKS,
+    ) {}
 
     /** Enregistre le filtre sur les arguments des types de blocs. */
     public function register(): void {
@@ -53,7 +60,7 @@ final class DisableNativeBlockSupports implements FeatureInterface {
      * @return array
      */
     public function remove_supports( array $args, string $block_type ): array {
-        if ( ! in_array( $block_type, self::BLOCKS, true ) ) {
+        if ( ! in_array( $block_type, $this->blocks, true ) ) {
             return $args;
         }
 
