@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Theme\Features\Front;
 
 use Theme\Contracts\FeatureInterface;
+use Theme\Support\ViteDevServer;
 use Theme\Support\ViteManifest;
 
 /**
@@ -18,9 +19,8 @@ use Theme\Support\ViteManifest;
  * En développement : se connecte au serveur Vite (HMR activé).
  * En production    : résout les noms hachés via le manifest (`Support\ViteManifest`).
  *
- * La détection du mode repose sur `dist/hot` :
- * - Présent → `npm run dev` est actif (fichier écrit par le plugin wordpressHot)
- * - Absent  → `npm run build` (le manifest est utilisé)
+ * L'arbitrage entre les deux modes est délégué à `Support\ViteDevServer`, qui teste
+ * la présence du fichier témoin `dist/hot`.
  */
 final class Assets implements FeatureInterface {
 
@@ -30,6 +30,10 @@ final class Assets implements FeatureInterface {
     /** Handles WordPress des scripts Vite (pour le filtre type="module"). */
     private const SCRIPT_HANDLES = [ 'vite-client', 'mon-theme-app' ];
 
+    public function __construct(
+        private readonly ViteDevServer $dev_server = new ViteDevServer(),
+    ) {}
+
     /** Enregistre le hook d'enfilement des assets. */
     public function register(): void {
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ] );
@@ -37,26 +41,11 @@ final class Assets implements FeatureInterface {
 
     /** Point d'entrée : sélectionne le mode dev ou production. */
     public function enqueue(): void {
-        if ( $this->is_dev_mode() ) {
+        if ( $this->dev_server->is_active() ) {
             $this->enqueue_dev_assets();
         } else {
             $this->enqueue_production_assets();
         }
-    }
-
-    /** Détecte le mode dev via la présence du fichier `dist/hot`. */
-    private function is_dev_mode(): bool {
-        return file_exists( $this->hot_file_path() );
-    }
-
-    /** Lit l'URL du serveur Vite depuis `dist/hot`. */
-    private function get_dev_server_url(): string {
-        return rtrim( (string) file_get_contents( $this->hot_file_path() ), '/' );
-    }
-
-    /** Chemin absolu du fichier `dist/hot`. */
-    private function hot_file_path(): string {
-        return get_template_directory() . '/dist/hot';
     }
 
     /**
@@ -64,7 +53,7 @@ final class Assets implements FeatureInterface {
      * Le client Vite gère le HMR (Hot Module Replacement) automatiquement.
      */
     private function enqueue_dev_assets(): void {
-        $base = $this->get_dev_server_url();
+        $base = $this->dev_server->url();
 
         wp_enqueue_script(
             'vite-client',
@@ -83,7 +72,7 @@ final class Assets implements FeatureInterface {
             true
         );
 
-        add_filter( 'script_loader_tag', [ $this, 'add_module_type' ], 10, 2 );
+        $this->dev_server->serve_as_modules( self::SCRIPT_HANDLES );
     }
 
     /**
@@ -109,22 +98,6 @@ final class Assets implements FeatureInterface {
             true
         );
 
-        add_filter( 'script_loader_tag', [ $this, 'add_module_type' ], 10, 2 );
-    }
-
-    /**
-     * Ajoute `type="module"` aux balises <script> des handles Vite.
-     * Requis car les ES modules (import/export) ne fonctionnent qu'avec ce type.
-     */
-    public function add_module_type( string $tag, string $handle ): string {
-        if ( ! in_array( $handle, self::SCRIPT_HANDLES, true ) ) {
-            return $tag;
-        }
-
-        if ( str_contains( $tag, 'type=' ) ) {
-            return (string) preg_replace( '/type=["\']text\/javascript["\']/', 'type="module"', $tag );
-        }
-
-        return str_replace( '<script ', '<script type="module" ', $tag );
+        $this->dev_server->serve_as_modules( self::SCRIPT_HANDLES );
     }
 }
