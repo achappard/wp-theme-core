@@ -32,6 +32,7 @@ final class Assets implements FeatureInterface {
 
     public function __construct(
         private readonly ViteDevServer $dev_server = new ViteDevServer(),
+        private readonly ViteManifest $manifest = new ViteManifest(),
     ) {}
 
     /** Enregistre le hook d'enfilement des assets. */
@@ -80,19 +81,19 @@ final class Assets implements FeatureInterface {
      * Vite extrait le CSS dans un fichier séparé avec un nom haché.
      */
     private function enqueue_production_assets(): void {
-        $entry = ViteManifest::entry( self::ENTRY );
+        $entry = $this->manifest->entry( self::ENTRY );
 
         if ( empty( $entry ) ) {
             return;
         }
 
         foreach ( $entry['css'] ?? [] as $css_file ) {
-            wp_enqueue_style( 'mon-theme-app', ViteManifest::asset_url( (string) $css_file ), [], null );
+            wp_enqueue_style( 'mon-theme-app', $this->manifest->asset_url( (string) $css_file ), [], null );
         }
 
         wp_enqueue_script(
             'mon-theme-app',
-            ViteManifest::asset_url( (string) $entry['file'] ),
+            $this->manifest->asset_url( (string) $entry['file'] ),
             [],
             null,
             true

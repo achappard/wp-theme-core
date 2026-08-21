@@ -76,6 +76,10 @@ final class AdminColorScheme implements FeatureInterface {
         'current' => '#fff',
     ];
 
+    public function __construct(
+        private readonly ViteManifest $manifest = new ViteManifest(),
+    ) {}
+
     /** Enregistre les hooks du jeu de couleurs. */
     public function register(): void {
         // Le core déclare ses propres schemes sur `admin_init` en priorité 1 :
@@ -95,7 +99,7 @@ final class AdminColorScheme implements FeatureInterface {
      * du sélecteur qu'une entrée pointant sur une feuille inexistante.
      */
     public function register_scheme(): void {
-        $url = ViteManifest::entry_url( self::ENTRY );
+        $url = $this->manifest->entry_url( self::ENTRY );
 
         if ( '' === $url ) {
             return;

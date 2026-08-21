@@ -24,7 +24,7 @@ namespace Theme\Support;
 final class ViteDevServer {
 
     /** Fichier témoin du dev server, relatif à la racine du thème. */
-    private const HOT_FILE = '/dist/hot';
+    private const HOT_FILE = 'dist/hot';
 
     /** Indique si le dev server Vite tourne. */
     public function is_active(): bool {
@@ -66,6 +66,6 @@ final class ViteDevServer {
 
     /** Chemin absolu du fichier témoin `dist/hot`. */
     private function hot_file_path(): string {
-        return get_template_directory() . self::HOT_FILE;
+        return get_theme_file_path( self::HOT_FILE );
     }
 }

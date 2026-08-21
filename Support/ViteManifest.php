@@ -18,20 +18,21 @@ namespace Theme\Support;
  * passe par ici plutôt que d'ouvrir ce fichier elle-même : le chemin du manifest
  * et la forme de ses entrées ne sont connus que d'un seul endroit.
  *
- * Le manifest est lu une fois par requête — il ne peut pas changer en cours de
- * route, et plusieurs features le consultent (`Front\Assets`, `Admin\LoginBranding`,
- * `Admin\AdminColorScheme`).
+ * Le manifest est lu une fois par instance — il ne peut pas changer en cours de
+ * requête. Les chemins passent par `get_theme_file_path()` / `get_theme_file_uri()`,
+ * qui résolvent le thème actif quel que soit l'emplacement de cette classe et
+ * exposent les filtres `theme_file_path` / `theme_file_uri`.
  */
 final class ViteManifest {
 
     /** Répertoire de sortie de Vite, relatif à la racine du thème. */
-    private const DIST_DIR = '/dist/assets';
+    private const DIST_DIR = 'dist/assets';
 
     /** Chemin du manifest, relatif au répertoire de sortie. */
     private const MANIFEST = '/.vite/manifest.json';
 
-    /** Manifest décodé, mémorisé pour la durée de la requête. */
-    private static ?array $manifest = null;
+    /** Manifest décodé, mémorisé pour la durée de vie de l'instance. */
+    private ?array $manifest = null;
 
     /**
      * Retourne la description d'une entrée du manifest.
@@ -39,8 +40,8 @@ final class ViteManifest {
      * @param string $entry Chemin de la source, tel que déclaré dans vite.config.js.
      * @return array Tableau vide si le build manque ou si l'entrée est inconnue.
      */
-    public static function entry( string $entry ): array {
-        $data = self::load()[ $entry ] ?? [];
+    public function entry( string $entry ): array {
+        $data = $this->load()[ $entry ] ?? [];
 
         return is_array( $data ) ? $data : [];
     }
@@ -51,10 +52,10 @@ final class ViteManifest {
      * @param string $entry Chemin de la source, tel que déclaré dans vite.config.js.
      * @return string Chaîne vide si le build manque ou si l'entrée est inconnue.
      */
-    public static function entry_url( string $entry ): string {
-        $file = (string) ( self::entry( $entry )['file'] ?? '' );
+    public function entry_url( string $entry ): string {
+        $file = (string) ( $this->entry( $entry )['file'] ?? '' );
 
-        return '' === $file ? '' : self::asset_url( $file );
+        return '' === $file ? '' : $this->asset_url( $file );
     }
 
     /**
@@ -62,12 +63,12 @@ final class ViteManifest {
      *
      * @param string $file Chemin relatif au répertoire de sortie (ex. `app-a1b2c3.css`).
      */
-    public static function asset_url( string $file ): string {
-        return get_template_directory_uri() . self::DIST_DIR . '/' . $file;
+    public function asset_url( string $file ): string {
+        return get_theme_file_uri( self::DIST_DIR . '/' . $file );
     }
 
     /**
-     * Lit et décode le manifest, une seule fois par requête.
+     * Lit et décode le manifest, une seule fois.
      *
      * Un manifest absent (build jamais lancé) comme un manifest illisible
      * retournent un tableau vide : c'est aux appelants de dégrader proprement.
@@ -75,19 +76,19 @@ final class ViteManifest {
      * traverserait la méthode et ferait échouer le type de retour — page blanche
      * là où l'on veut simplement un asset manquant.
      */
-    private static function load(): array {
-        if ( null !== self::$manifest ) {
-            return self::$manifest;
+    private function load(): array {
+        if ( null !== $this->manifest ) {
+            return $this->manifest;
         }
 
-        $path = get_template_directory() . self::DIST_DIR . self::MANIFEST;
+        $path = get_theme_file_path( self::DIST_DIR . self::MANIFEST );
 
         $data = file_exists( $path )
             ? json_decode( (string) file_get_contents( $path ), true )
             : null;
 
-        self::$manifest = is_array( $data ) ? $data : [];
+        $this->manifest = is_array( $data ) ? $data : [];
 
-        return self::$manifest;
+        return $this->manifest;
     }
 }

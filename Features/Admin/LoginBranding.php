@@ -39,6 +39,7 @@ final class LoginBranding implements FeatureInterface {
 
     public function __construct(
         private readonly ViteDevServer $dev_server = new ViteDevServer(),
+        private readonly ViteManifest $manifest = new ViteManifest(),
     ) {}
 
     /** Enregistre les hooks de personnalisation de la page de connexion. */
@@ -74,14 +75,14 @@ final class LoginBranding implements FeatureInterface {
 
     /** Charge la feuille buildée, dont l'URL du logo a été réécrite par Vite. */
     private function enqueue_production_assets(): void {
-        $entry = ViteManifest::entry( self::ENTRY );
+        $entry = $this->manifest->entry( self::ENTRY );
 
         if ( empty( $entry ) ) {
             return;
         }
 
         foreach ( $entry['css'] ?? [] as $css_file ) {
-            wp_enqueue_style( 'mon-theme-login', ViteManifest::asset_url( (string) $css_file ), [], null );
+            wp_enqueue_style( 'mon-theme-login', $this->manifest->asset_url( (string) $css_file ), [], null );
         }
     }
 
