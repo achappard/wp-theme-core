@@ -152,7 +152,7 @@ final class SvgSupport implements FeatureInterface {
         }
 
         if ( ! current_user_can( self::REQUIRED_CAPABILITY ) ) {
-            $file['error'] = __( 'Vous n’êtes pas autorisé à envoyer des fichiers SVG.', 'mon-theme' );
+            $file['error'] = __( 'Vous n’êtes pas autorisé à envoyer des fichiers SVG.', 'wp-theme-core' );
 
             return $file;
         }
@@ -161,7 +161,7 @@ final class SvgSupport implements FeatureInterface {
         $original = is_readable( $path ) ? file_get_contents( $path ) : false;
 
         if ( false === $original ) {
-            $file['error'] = __( 'Le fichier SVG n’a pas pu être lu.', 'mon-theme' );
+            $file['error'] = __( 'Le fichier SVG n’a pas pu être lu.', 'wp-theme-core' );
 
             return $file;
         }
@@ -169,13 +169,13 @@ final class SvgSupport implements FeatureInterface {
         $sanitized = $this->sanitize_markup( $original );
 
         if ( null === $sanitized ) {
-            $file['error'] = __( 'Ce fichier SVG a été refusé : il est invalide ou contient du code non autorisé.', 'mon-theme' );
+            $file['error'] = __( 'Ce fichier SVG a été refusé : il est invalide ou contient du code non autorisé.', 'wp-theme-core' );
 
             return $file;
         }
 
         if ( false === file_put_contents( $path, $sanitized ) ) {
-            $file['error'] = __( 'Le fichier SVG n’a pas pu être nettoyé avant son enregistrement.', 'mon-theme' );
+            $file['error'] = __( 'Le fichier SVG n’a pas pu être nettoyé avant son enregistrement.', 'wp-theme-core' );
         }
 
         return $file;

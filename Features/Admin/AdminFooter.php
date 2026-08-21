@@ -46,7 +46,7 @@ final class AdminFooter implements FeatureInterface {
 
         return sprintf(
             /* translators: 1: lien vers le site de l'agence, 2: description de l'agence */
-            __( 'Une création %1$s — %2$s', 'mon-theme' ),
+            __( 'Une création %1$s — %2$s', 'wp-theme-core' ),
             $link,
             esc_html( $this->agency_desc )
         );

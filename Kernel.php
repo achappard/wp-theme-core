@@ -14,6 +14,17 @@ use InvalidArgumentException;
 use Timber\Timber;
 
 class Kernel {
+
+    /**
+     * Text-domain des chaînes du socle, distinct de celui du thème.
+     *
+     * Littéral et fixe : `wp i18n make-pot` n'extrait que cette forme. Les features
+     * du socle vivant hors du thème, leurs chaînes ne peuvent pas partager son
+     * domaine — elles seraient absentes du `.pot` du projet, et retraduites à
+     * chaque nouveau site.
+     */
+    private const CORE_TEXTDOMAIN = 'wp-theme-core';
+
     /**
      * Instance unique de la classe
      */
@@ -29,8 +40,37 @@ class Kernel {
         private readonly ThemeContext $context,
         private readonly array $providers,
     ) {
+        $this->init_core_translations();
         $this->init_timber();
         $this->load_features();
+    }
+
+    /**
+     * Enregistre le répertoire des traductions du socle.
+     *
+     * WordPress ne le fait que pour le thème, d'après les en-têtes de `style.css` :
+     * le domaine du socle, lui, doit être déclaré explicitement.
+     *
+     * `load_theme_textdomain()` et non `load_textdomain()` : le second exigerait de
+     * résoudre la locale ici, or `determine_locale()` appelle `get_user_locale()` en
+     * back-office, donc `wp_get_current_user()` — bien avant que WordPress n'ait
+     * initialisé l'utilisateur courant. Depuis WP 6.7 le premier ne fait qu'enregistrer
+     * un chemin, le chargement ayant lieu au premier `__()`.
+     *
+     * ⚠️ Le nom attendu du `.mo` dépend de l'emplacement de ce répertoire :
+     * `fr_FR.mo` s'il est sous le thème, `wp-theme-core-fr_FR.mo` sinon
+     * (cf. `_load_textdomain_just_in_time()` dans wp-includes/l10n.php). Installé en
+     * dépendance Composer classique il est sous le thème ; monté en `repository: path`
+     * avec `symlink`, il ne l'est plus. Livrer **les deux noms**, en `.mo` et en
+     * `.l10n.php`, est la seule façon d'être correct dans les deux cas.
+     */
+    private function init_core_translations(): void {
+        $path = __DIR__ . '/languages';
+
+        add_action(
+            'after_setup_theme',
+            static fn() => load_theme_textdomain( self::CORE_TEXTDOMAIN, $path )
+        );
     }
 
     /**

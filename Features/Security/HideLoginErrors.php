@@ -58,7 +58,7 @@ final class HideLoginErrors implements FeatureInterface {
             return $errors;
         }
 
-        return __( 'Identifiant ou mot de passe incorrect.', 'mon-theme' );
+        return __( 'Identifiant ou mot de passe incorrect.', 'wp-theme-core' );
     }
 
     /**
