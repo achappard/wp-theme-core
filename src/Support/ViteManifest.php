@@ -68,6 +68,26 @@ final class ViteManifest {
     }
 
     /**
+     * Chemin du fichier émis pour une entrée, **relatif à la racine du thème**
+     * (ex. `dist/assets/editor-gutenberg-a1b2c3.css`).
+     *
+     * Contrepartie de `entry_url()` pour les rares API du core qui attendent un
+     * chemin de thème plutôt qu'une URL — `add_editor_style()` au premier chef :
+     * une URL absolue y ferait basculer `get_block_editor_theme_styles()` sur la
+     * branche `wp_remote_get()`, soit une requête HTTP du site vers lui-même à
+     * chaque ouverture de l'éditeur, là où un chemin est simplement lu sur disque
+     * (cf. wp-includes/block-editor.php).
+     *
+     * @param string $entry Chemin de la source, tel que déclaré dans vite.config.js.
+     * @return string Chaîne vide si le build manque ou si l'entrée est inconnue.
+     */
+    public function entry_relative_path( string $entry ): string {
+        $file = (string) ( $this->entry( $entry )['file'] ?? '' );
+
+        return '' === $file ? '' : self::DIST_DIR . '/' . $file;
+    }
+
+    /**
      * Lit et décode le manifest, une seule fois.
      *
      * Un manifest absent (build jamais lancé) comme un manifest illisible

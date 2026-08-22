@@ -179,7 +179,12 @@ Le socle ne construit ni n'enfile d'assets lui-même : il lit ce que le build du
 - `dist/hot` — témoin du dev server, écrit et supprimé par le plugin `wordpressHot` de `vite.config.js`
 - `dist/assets/.vite/manifest.json` — résolution des noms hachés
 - Entrées attendues par défaut : `resources/js/app.js`, `resources/js/login.js`,
-  `resources/scss/admin-colors.scss` (celle-ci paramétrable via `AdminColorScheme( entry: … )`)
+  `resources/scss/admin-colors.scss` (paramétrable via `AdminColorScheme( entry: … )`),
+  `resources/scss/editor-gutenberg.scss` (paramétrable via `EditorStyles( entry: … )`)
+
+Les deux entrées SCSS sont des **entrées CSS pures**, sans JS d'accompagnement, et sont toujours
+servies depuis `dist/assets/` : c'est WordPress qui les lit, jamais le navigateur via le dev server.
+Les modifier impose un `npm run build`, même en `npm run dev`.
 
 ---
 
@@ -192,5 +197,6 @@ Le socle ne construit ni n'enfile d'assets lui-même : il lit ce que le build du
 - [ ] Jeu de couleurs admin appliqué, pastilles correctes dans le sélecteur du profil
 - [ ] Pied de page de l'administration
 - [ ] Éditeur : liste blanche de blocs respectée, supports couleur/typographie retirés
+- [ ] Éditeur : le canvas reprend les styles du thème (`editor-gutenberg.scss` inlinée dans la page)
 - [ ] Upload d'un SVG valide accepté, d'un SVG malformé refusé
 - [ ] Aucun notice avec `WP_DEBUG` activé
