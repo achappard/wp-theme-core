@@ -43,3 +43,19 @@ msgstr "The SVG file could not be cleaned up before it was saved."
 #: Features/Security/HideLoginErrors.php:61
 msgid "Identifiant ou mot de passe incorrect."
 msgstr "Incorrect login or password."
+
+#: Features/Admin/ShowHidePageTitle.php:159
+msgid "Titre"
+msgstr "Title"
+
+#: Features/Admin/ShowHidePageTitle.php:160
+msgid "Afficher le titre"
+msgstr "Show the title"
+
+#: Features/Admin/ShowHidePageTitle.php:161
+msgid "Le titre est affiché dans l’éditeur."
+msgstr "The title is shown in the editor."
+
+#: Features/Admin/ShowHidePageTitle.php:162
+msgid "Le titre est masqué dans l’éditeur ; il reste modifiable en haut de cette barre latérale."
+msgstr "The title is hidden in the editor; it remains editable at the top of this sidebar."

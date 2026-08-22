@@ -12,6 +12,37 @@ le diff six mois plus tard :
 
 ---
 
+## [1.2.0] — 2026-08-22
+
+### Ajouté
+
+- `Features\Admin\ShowHidePageTitle` — interrupteur « Afficher le titre » dans le panneau de
+  document de Gutenberg. Masque le champ titre du canvas, et conserve l'état dans une meta de
+  contenu (`_hide_post_title` par défaut). Paramétrable : `post_types` (défaut `['page']`) et
+  `meta_key`
+- `assets/js/` dans le package — le script du panneau, **lu sur disque**, jamais servi par une URL
+
+### Notes
+
+- **Périmètre strictement éditorial** : le socle ne lit la meta nulle part ailleurs, le rendu public
+  reste l'affaire des templates du thème
+- Le script n'est pas enfilé par URL : `vendor/` n'est pas garanti accessible en HTTP d'un
+  hébergement à l'autre, et une balise pointant dessus marcherait en local pour échouer en
+  production sans message. Il part donc en inline, sur un handle sans source
+- La feuille n'est pas un fichier mais quatre lignes construites depuis la constante `BODY_CLASS` :
+  un fichier CSS aurait redit cette classe en dur, sans que rien ne vérifie qu'elle la suive
+- Le JS pose la feuille lui-même dans le document de l'éditeur **et** dans celui du canvas iframé,
+  plutôt que par `add_editor_style()` : le core y réécrit les sélecteurs en les préfixant de
+  `.editor-styles-wrapper`, ce qui déplacerait la classe conditionnelle et casserait la règle
+- Écrit sans JSX ni imports, sur `window.wp` : le socle n'a pas de build, et n'en gagne pas un
+- Comme `languages/`, `assets/js/` doit être commité et présent dans le tag — l'installation d'un
+  package Composer ne déclenche aucune étape de build
+
+**Impact projet :** nécessite une modification du provider — ajouter `new ShowHidePageTitle( $context )`
+à `AdminServiceProvider`. Sans cela la feature reste inerte.
+
+---
+
 ## [1.1.0] — 2026-08-22
 
 ### Ajouté
