@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: aurelien.chappard@deefuse.fr\n"
-"POT-Creation-Date: 2026-08-21T05:59:30+00:00\n"
+"POT-Creation-Date: 2026-08-22T11:26:25+00:00\n"
 "PO-Revision-Date: 2026-08-21 09:18+0200\n"
 "Last-Translator: Aurélien Chappard <aurelien.chappard@deefuse.fr>\n"
 "Language-Team: \n"
@@ -20,6 +20,34 @@ msgstr ""
 msgid "Une création %1$s — %2$s"
 msgstr "A creation %1$s — %2$s"
 
+#: Features/Admin/ShowHidePageTitle.php:208
+msgid "Titre"
+msgstr "Title"
+
+#: Features/Admin/ShowHidePageTitle.php:209
+msgid "Afficher le titre"
+msgstr "Show the title"
+
+#: Features/Admin/ShowHidePageTitle.php:210
+msgid ""
+"Réglage global : le titre est affiché dans l’éditeur, sur tous les contenus "
+"concernés."
+msgstr ""
+"Site-wide setting: the title is shown in the editor, on every content type "
+"concerned."
+
+#: Features/Admin/ShowHidePageTitle.php:211
+msgid ""
+"Réglage global : le titre est masqué dans l’éditeur, sur tous les contenus "
+"concernés ; il reste modifiable en haut de cette barre latérale."
+msgstr ""
+"Site-wide setting: the title is hidden in the editor, on every content type "
+"concerned; it remains editable at the top of this sidebar."
+
+#: Features/Admin/ShowHidePageTitle.php:212
+msgid "Le réglage n’a pas pu être enregistré."
+msgstr "The setting could not be saved."
+
 #: Features/Admin/SvgSupport.php:155
 msgid "Vous n’êtes pas autorisé à envoyer des fichiers SVG."
 msgstr "You are not allowed to upload SVG files."
@@ -33,8 +61,7 @@ msgid ""
 "Ce fichier SVG a été refusé : il est invalide ou contient du code non "
 "autorisé."
 msgstr ""
-"This SVG file was rejected: it is invalid or contains unauthorized "
-"code."
+"This SVG file was rejected: it is invalid or contains unauthorized code."
 
 #: Features/Admin/SvgSupport.php:178
 msgid "Le fichier SVG n’a pas pu être nettoyé avant son enregistrement."
@@ -44,18 +71,12 @@ msgstr "The SVG file could not be cleaned up before it was saved."
 msgid "Identifiant ou mot de passe incorrect."
 msgstr "Incorrect login or password."
 
-#: Features/Admin/ShowHidePageTitle.php:159
-msgid "Titre"
-msgstr "Title"
+#~ msgid "Le titre est affiché dans l’éditeur."
+#~ msgstr "The title is shown in the editor."
 
-#: Features/Admin/ShowHidePageTitle.php:160
-msgid "Afficher le titre"
-msgstr "Show the title"
-
-#: Features/Admin/ShowHidePageTitle.php:161
-msgid "Le titre est affiché dans l’éditeur."
-msgstr "The title is shown in the editor."
-
-#: Features/Admin/ShowHidePageTitle.php:162
-msgid "Le titre est masqué dans l’éditeur ; il reste modifiable en haut de cette barre latérale."
-msgstr "The title is hidden in the editor; it remains editable at the top of this sidebar."
+#~ msgid ""
+#~ "Le titre est masqué dans l’éditeur ; il reste modifiable en haut de cette "
+#~ "barre latérale."
+#~ msgstr ""
+#~ "The title is hidden in the editor; it remains editable at the top of this "
+#~ "sidebar."

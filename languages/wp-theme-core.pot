@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-22T11:02:13+00:00\n"
+"POT-Creation-Date: 2026-08-22T11:26:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-theme-core\n"
@@ -19,20 +19,24 @@ msgstr ""
 msgid "Une création %1$s — %2$s"
 msgstr ""
 
-#: Features/Admin/ShowHidePageTitle.php:159
+#: Features/Admin/ShowHidePageTitle.php:208
 msgid "Titre"
 msgstr ""
 
-#: Features/Admin/ShowHidePageTitle.php:160
+#: Features/Admin/ShowHidePageTitle.php:209
 msgid "Afficher le titre"
 msgstr ""
 
-#: Features/Admin/ShowHidePageTitle.php:161
-msgid "Le titre est affiché dans l’éditeur."
+#: Features/Admin/ShowHidePageTitle.php:210
+msgid "Réglage global : le titre est affiché dans l’éditeur, sur tous les contenus concernés."
 msgstr ""
 
-#: Features/Admin/ShowHidePageTitle.php:162
-msgid "Le titre est masqué dans l’éditeur ; il reste modifiable en haut de cette barre latérale."
+#: Features/Admin/ShowHidePageTitle.php:211
+msgid "Réglage global : le titre est masqué dans l’éditeur, sur tous les contenus concernés ; il reste modifiable en haut de cette barre latérale."
+msgstr ""
+
+#: Features/Admin/ShowHidePageTitle.php:212
+msgid "Le réglage n’a pas pu être enregistré."
 msgstr ""
 
 #: Features/Admin/SvgSupport.php:155

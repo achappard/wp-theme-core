@@ -17,26 +17,41 @@ le diff six mois plus tard :
 ### Ajouté
 
 - `Features\Admin\ShowHidePageTitle` — interrupteur « Afficher le titre » dans le panneau de
-  document de Gutenberg. Masque le champ titre du canvas, et conserve l'état dans une meta de
-  contenu (`_hide_post_title` par défaut). Paramétrable : `post_types` (défaut `['page']`) et
-  `meta_key`
+  document de Gutenberg, qui masque le champ titre du canvas. **Réglage global** : l'état vit dans
+  une option (`deefuse_hide_post_title` par défaut) et vaut pour tous les types déclarés. Trois
+  paramètres : `post_types` (défaut `['page']`), `option`, `capability` (défaut `edit_posts`)
+- Route REST `deefuse/v1/hide-post-title` — écriture du réglage, permission portée par `capability`
 - `assets/js/` dans le package — le script du panneau, **lu sur disque**, jamais servi par une URL
 
 ### Notes
 
-- **Périmètre strictement éditorial** : le socle ne lit la meta nulle part ailleurs, le rendu public
-  reste l'affaire des templates du thème
+- **Périmètre strictement éditorial** : le socle ne lit l'option nulle part ailleurs, le rendu
+  public reste l'affaire des templates du thème
+- **Une route REST plutôt que `register_setting()`** : `/wp/v2/settings` exige `manage_options`,
+  écrit en dur dans `WP_REST_Settings_Controller` et qu'aucun filtre n'abaisse — y adosser l'option
+  interdirait le réglage à toute personne n'administrant pas le site
+- L'écriture est **immédiate**, non différée jusqu'au « Mettre à jour » : ce bouton enregistre le
+  post, pas les réglages du site
 - Le script n'est pas enfilé par URL : `vendor/` n'est pas garanti accessible en HTTP d'un
   hébergement à l'autre, et une balise pointant dessus marcherait en local pour échouer en
   production sans message. Il part donc en inline, sur un handle sans source
 - La feuille n'est pas un fichier mais quatre lignes construites depuis la constante `BODY_CLASS` :
   un fichier CSS aurait redit cette classe en dur, sans que rien ne vérifie qu'elle la suive
-- Le JS pose la feuille lui-même dans le document de l'éditeur **et** dans celui du canvas iframé,
-  plutôt que par `add_editor_style()` : le core y réécrit les sélecteurs en les préfixant de
+- Le script pose la feuille lui-même dans le document de l'éditeur **et** dans celui du canvas
+  iframé, plutôt que par `add_editor_style()` : le core y réécrit les sélecteurs en les préfixant de
   `.editor-styles-wrapper`, ce qui déplacerait la classe conditionnelle et casserait la règle
+- Il surveille le montage du canvas (`MutationObserver`) et s'applique dès son chargement, sans
+  attendre le rendu de la barre latérale : la première passe a lieu avant que l'iframe n'existe, et
+  l'état ne changeant pas au rechargement, rien ne la rejouerait
 - Écrit sans JSX ni imports, sur `window.wp` : le socle n'a pas de build, et n'en gagne pas un
 - Comme `languages/`, `assets/js/` doit être commité et présent dans le tag — l'installation d'un
   package Composer ne déclenche aucune étape de build
+
+> ⚠️ **Tag republié.** Une première v1.2.0 stockait l'état dans une post meta `_hide_post_title`, et
+> exposait un paramètre `meta_key`. Le tag a été déplacé sur la présente version plutôt que
+> d'ouvrir une 1.3.0 pour une API que rien n'avait consommée. Un poste ayant installé la première
+> v1.2.0 garde l'ancien code sans aucun signal : y forcer une réinstallation
+> (`rm -rf vendor/deefuse/wp-theme-core && composer install`) est le seul moyen de s'aligner.
 
 **Impact projet :** nécessite une modification du provider — ajouter `new ShowHidePageTitle( $context )`
 à `AdminServiceProvider`. Sans cela la feature reste inerte.

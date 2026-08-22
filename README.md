@@ -199,6 +199,7 @@ Les modifier impose un `npm run build`, même en `npm run dev`.
 - [ ] Éditeur : liste blanche de blocs respectée, supports couleur/typographie retirés
 - [ ] Éditeur : le canvas reprend les styles du thème (`editor-gutenberg.scss` inlinée dans la page)
 - [ ] Éditeur : interrupteur « Afficher le titre » présent sur une page, le champ titre du canvas
-      disparaît et réapparaît sans recharger, et l'état survit à un enregistrement
+      disparaît et réapparaît sans recharger, **l'état survit à un rechargement (F5)** et vaut pour
+      toutes les pages — c'est un réglage global
 - [ ] Upload d'un SVG valide accepté, d'un SVG malformé refusé
 - [ ] Aucun notice avec `WP_DEBUG` activé

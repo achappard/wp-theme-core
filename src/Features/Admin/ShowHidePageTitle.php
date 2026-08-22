@@ -11,15 +11,32 @@ namespace Deefuse\ThemeCore\Features\Admin;
 
 use Deefuse\ThemeCore\Contracts\FeatureInterface;
 use Deefuse\ThemeCore\ThemeContext;
+use WP_Error;
+use WP_REST_Request;
+use WP_REST_Response;
 
 /**
  * Ajoute au panneau de document de Gutenberg un interrupteur « Afficher le titre »,
  * qui masque le champ titre du canvas quand il est désactivé.
  *
- * **Périmètre strictement éditorial.** L'état est conservé dans une meta de contenu,
- * mais le socle ne le lit nulle part ailleurs : le rendu public reste l'affaire des
- * templates du thème, libres de consulter cette meta ou de l'ignorer. Rien ici ne
- * change ce que voit un visiteur.
+ * **Le réglage est global, pas par contenu.** Il vit dans une option, et vaut donc
+ * pour tous les types déclarés : basculer l'interrupteur depuis une page le bascule
+ * partout. L'interrupteur reste dans la barre latérale, là où le besoin se présente,
+ * mais ne décrit pas la page courante — le libellé d'aide le dit explicitement.
+ *
+ * **Périmètre strictement éditorial.** Le socle ne lit l'option nulle part ailleurs :
+ * le rendu public reste l'affaire des templates du thème, libres de la consulter ou
+ * de l'ignorer. Rien ici ne change ce que voit un visiteur.
+ *
+ * **Une route REST plutôt que `register_setting()`.** L'endpoint `/wp/v2/settings`
+ * exige `manage_options`, écrit en dur dans `WP_REST_Settings_Controller` et
+ * qu'aucun filtre ne permet d'abaisser : y adosser l'option interdirait le réglage
+ * à toute personne n'administrant pas le site. Le socle expose donc sa propre route,
+ * dont la permission est portée par `$capability`.
+ *
+ * L'écriture est **immédiate**, et non différée jusqu'au « Mettre à jour » du contenu :
+ * le bouton de l'éditeur enregistre le post, pas les réglages du site, et un réglage
+ * global n'a de toute façon pas à dépendre de l'enregistrement d'une page particulière.
  *
  * **Le JS est lu sur disque, jamais servi par une URL.** Il vit dans `assets/` du
  * package, donc sous `vendor/` une fois installé — un répertoire que beaucoup
@@ -30,25 +47,30 @@ use Deefuse\ThemeCore\ThemeContext;
  * **La feuille, elle, n'est pas un fichier** : quatre lignes construites par `css()`
  * à partir de `BODY_CLASS`. Un fichier CSS aurait redit cette classe en dur, sans que
  * rien ne vérifie qu'elle suive la constante — la règle aurait cessé de s'appliquer en
- * silence au premier renommage. Elle est confiée au script, qui la pose lui-même.
+ * silence au premier renommage. Elle est confiée au script, qui la pose lui-même dans
+ * le document de l'éditeur et dans celui du canvas iframé. `add_editor_style()` y ferait
+ * réécrire les sélecteurs par le core, préfixés de `.editor-styles-wrapper`, ce qui
+ * déplacerait la classe conditionnelle et casserait la règle.
  *
- * **Pourquoi le JS pose la feuille plutôt que `add_editor_style()`.** Le champ titre
- * vit dans le canvas, iframé depuis WP 6.5, et `add_editor_style()` y fait réécrire
- * les sélecteurs par le core, préfixés de `.editor-styles-wrapper` — ce qui déplacerait
- * la classe conditionnelle et casserait la règle. En posant la feuille dans les deux
- * documents, on couvre le canvas iframé comme l'ancien rendu en place, sans dépendre
- * d'une transformation dont la forme n'est pas contractuelle.
- *
- * La meta stocke « masquer », l'interrupteur affiche « afficher » : une meta absente
- * vaut donc titre visible, et les contenus existants restent inchangés à l'activation.
+ * L'option stocke « masquer », l'interrupteur affiche « afficher » : une option absente
+ * vaut donc titre visible, et rien ne change à l'activation de la feature.
  */
 final class ShowHidePageTitle implements FeatureInterface {
 
-    /** Types de contenu concernés, par défaut. */
+    /** Types de contenu recevant l'interrupteur, par défaut. */
     private const DEFAULT_POST_TYPES = [ 'page' ];
 
-    /** Clé de la meta, par défaut. Le préfixe `_` la rend protégée côté core. */
-    private const DEFAULT_META_KEY = '_hide_post_title';
+    /** Option stockant l'état, par défaut. */
+    private const DEFAULT_OPTION = 'deefuse_hide_post_title';
+
+    /** Capability requise pour basculer le réglage, par défaut. */
+    private const DEFAULT_CAPABILITY = 'edit_posts';
+
+    /** Espace de noms de la route REST. */
+    private const REST_NAMESPACE = 'deefuse/v1';
+
+    /** Route REST d'écriture du réglage. */
+    private const REST_ROUTE = '/hide-post-title';
 
     /** Classe portée par les `<body>` quand le titre est masqué. */
     private const BODY_CLASS = 'deefuse-hide-post-title';
@@ -61,42 +83,53 @@ final class ShowHidePageTitle implements FeatureInterface {
 
     /**
      * @param ThemeContext $context    Identité du thème, pour le handle du script.
-     * @param string[]     $post_types Types de contenu recevant l'interrupteur.
-     * @param string       $meta_key   Clé de la meta stockant l'état.
+     * @param string[]     $post_types Types de contenu où l'interrupteur est proposé.
+     * @param string       $option     Option stockant l'état, commune à tous ces types.
+     * @param string       $capability Capability requise pour basculer le réglage.
      */
     public function __construct(
         private readonly ThemeContext $context,
         private readonly array $post_types = self::DEFAULT_POST_TYPES,
-        private readonly string $meta_key = self::DEFAULT_META_KEY,
+        private readonly string $option = self::DEFAULT_OPTION,
+        private readonly string $capability = self::DEFAULT_CAPABILITY,
     ) {}
 
-    /** Enregistre la meta et le script du panneau. */
+    /** Enregistre la route REST et le script du panneau. */
     public function register(): void {
-        add_action( 'init', [ $this, 'register_meta' ] );
+        add_action( 'rest_api_init', [ $this, 'register_route' ] );
         add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue' ] );
     }
 
+    /** Déclare la route d'écriture du réglage. */
+    public function register_route(): void {
+        register_rest_route(
+            self::REST_NAMESPACE,
+            self::REST_ROUTE,
+            [
+                'methods'             => 'POST',
+                'callback'            => [ $this, 'update' ],
+                'permission_callback' => fn(): bool => current_user_can( $this->capability ),
+                'args'                => [
+                    'hidden' => [
+                        'type'     => 'boolean',
+                        'required' => true,
+                    ],
+                ],
+            ]
+        );
+    }
+
     /**
-     * Déclare la meta sur chaque type de contenu concerné.
+     * Enregistre l'état et le renvoie tel que relu.
      *
-     * `show_in_rest` est indispensable : c'est par l'API REST que l'éditeur lit et
-     * écrit les metas. Sans `auth_callback`, une clé préfixée `_` serait refusée en
-     * écriture, le core considérant les metas protégées comme hors de portée.
+     * `update_option()` retourne `false` aussi bien sur échec que lorsque la valeur
+     * est déjà celle demandée : on relit plutôt que d'interpréter ce retour, et le
+     * client se cale sur ce que la base contient réellement.
      */
-    public function register_meta(): void {
-        foreach ( $this->post_types as $post_type ) {
-            register_post_meta(
-                $post_type,
-                $this->meta_key,
-                [
-                    'type'          => 'boolean',
-                    'single'        => true,
-                    'default'       => false,
-                    'show_in_rest'  => true,
-                    'auth_callback' => static fn(): bool => current_user_can( 'edit_posts' ),
-                ]
-            );
-        }
+    public function update( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+        update_option( $this->option, (bool) $request->get_param( 'hidden' ) );
+
+        return new WP_REST_Response( [ 'hidden' => $this->hidden() ] );
     }
 
     /**
@@ -105,12 +138,16 @@ final class ShowHidePageTitle implements FeatureInterface {
      * `enqueue_block_editor_assets` se déclenche aussi sur l'éditeur de site et
      * l'écran des widgets, où ce panneau n'a pas de sens : on s'en tient aux écrans
      * d'édition des types déclarés. Un écran indéterminé fait renoncer plutôt que
-     * charger le script partout.
+     * charger le script partout — et sans la capability, il n'y a rien à proposer.
      */
     public function enqueue(): void {
         $screen = get_current_screen();
 
         if ( null === $screen || ! in_array( $screen->post_type, $this->post_types, true ) ) {
+            return;
+        }
+
+        if ( ! current_user_can( $this->capability ) ) {
             return;
         }
 
@@ -126,7 +163,7 @@ final class ShowHidePageTitle implements FeatureInterface {
         wp_register_script(
             $handle,
             false,
-            [ 'wp-plugins', 'wp-editor', 'wp-components', 'wp-element', 'wp-data', 'wp-core-data' ],
+            [ 'wp-plugins', 'wp-editor', 'wp-components', 'wp-element', 'wp-data', 'wp-api-fetch' ],
             null,
             true
         );
@@ -140,28 +177,39 @@ final class ShowHidePageTitle implements FeatureInterface {
         wp_add_inline_script( $handle, $script );
     }
 
+    /** État courant du réglage. */
+    private function hidden(): bool {
+        return (bool) get_option( $this->option, false );
+    }
+
     /**
      * Configuration transmise au script.
      *
-     * Les libellés sont traduits ici plutôt que dans le JS : le socle n'a pas de
-     * build, donc pas de catalogue JSON à charger par `wp_set_script_translations()`.
-     * Les résoudre en PHP les fait entrer dans le catalogue `wp-theme-core`, déjà
-     * livré avec le package.
+     * L'état initial est passé ici plutôt que lu par une requête au démarrage : il est
+     * déjà connu au moment où la page de l'éditeur se construit, et une lecture REST
+     * n'ajouterait qu'un aller-retour et un instant d'affichage incohérent.
+     *
+     * Les libellés sont traduits ici plutôt que dans le JS : le socle n'a pas de build,
+     * donc pas de catalogue JSON à charger par `wp_set_script_translations()`. Les
+     * résoudre en PHP les fait entrer dans le catalogue `wp-theme-core`, déjà livré
+     * avec le package.
      *
      * @return array<string, mixed>
      */
     private function config(): array {
         return [
             'pluginName'  => self::PLUGIN_NAME,
+            'restPath'    => '/' . self::REST_NAMESPACE . self::REST_ROUTE,
             'postTypes'   => array_values( $this->post_types ),
-            'metaKey'     => $this->meta_key,
+            'hidden'      => $this->hidden(),
             'bodyClass'   => self::BODY_CLASS,
             'styleId'     => self::STYLE_ID,
             'css'         => $this->css(),
             'panelTitle'  => __( 'Titre', 'wp-theme-core' ),
             'toggleLabel' => __( 'Afficher le titre', 'wp-theme-core' ),
-            'helpShown'   => __( 'Le titre est affiché dans l’éditeur.', 'wp-theme-core' ),
-            'helpHidden'  => __( 'Le titre est masqué dans l’éditeur ; il reste modifiable en haut de cette barre latérale.', 'wp-theme-core' ),
+            'helpShown'   => __( 'Réglage global : le titre est affiché dans l’éditeur, sur tous les contenus concernés.', 'wp-theme-core' ),
+            'helpHidden'  => __( 'Réglage global : le titre est masqué dans l’éditeur, sur tous les contenus concernés ; il reste modifiable en haut de cette barre latérale.', 'wp-theme-core' ),
+            'error'       => __( 'Le réglage n’a pas pu être enregistré.', 'wp-theme-core' ),
         ];
     }
 
