@@ -20,9 +20,8 @@ déclarés par une dépendance — seul le package racine compte).
 {
     "repositories": [
         {
-            "type": "vcs",
-            "url": "git@github.com:achappard/wp-theme-core.git",
-            "no-api": true
+            "type": "git",
+            "url": "git@github.com:achappard/wp-theme-core.git"
         }
     ],
     "require": {
@@ -31,8 +30,10 @@ déclarés par une dépendance — seul le package racine compte).
 }
 ```
 
-> `"no-api": true` est **indispensable**. Sans lui, Composer interroge `api.github.com` pour récupérer
-> une archive et réclame un token, même quand une clé SSH suffirait.
+> **`"type": "git"`, jamais `"vcs"`.** Avec une URL SSH, le driver `vcs`/GitHub inscrit dans le lock
+> une URL `dist` vers `api.github.com`, à laquelle une deploy key **n'a pas accès** : chaque
+> `composer install` d'un serveur essuierait un 404 avant de retomber sur le clone. `"no-api": true`
+> ne suffit pas à l'éviter — vérifié par installation à blanc.
 
 **Accès depuis un serveur** : une deploy key en lecture seule par serveur, ajoutée sur ce dépôt
 (GitHub en accepte plusieurs). C'est ce qui permet à `composer install` de tourner au déploiement,
@@ -202,4 +203,6 @@ Les modifier impose un `npm run build`, même en `npm run dev`.
       disparaît et réapparaît sans recharger, **l'état survit à un rechargement (F5)** et vaut pour
       toutes les pages — c'est un réglage global
 - [ ] Upload d'un SVG valide accepté, d'un SVG malformé refusé
+- [ ] Apparence → Menus : les emplacements déclarés apparaissent, libellés traduits ; un menu affecté
+      s'affiche au bon endroit, un emplacement non pourvu reste silencieusement vide
 - [ ] Aucun notice avec `WP_DEBUG` activé

@@ -12,6 +12,37 @@ le diff six mois plus tard :
 
 ---
 
+## [1.3.0] — 2026-08-24
+
+### Ajouté
+
+- `Features\Setup\Menus` — déclare les emplacements de menus du thème auprès de WordPress et
+  injecte, pour chacun, l'objet `Timber\Menu` correspondant dans le contexte Twig global, sous la
+  clé `{emplacement}_menu`
+
+### Notes
+
+- **Les libellés sont fournis par une closure, jamais un tableau.** `functions.php` — donc les
+  providers — s'exécute avant `after_setup_theme`. Un `__()` évalué à cet endroit fait charger le
+  catalogue de traduction trop tôt et déclenche le `_doing_it_wrong` de WordPress 6.7 dès qu'un
+  `.mo` existe pour la locale courante (cf. `_load_textdomain_just_in_time()` dans
+  `wp-includes/l10n.php`). La closure diffère cette évaluation jusqu'à `register_locations()`,
+  appelée sur `after_setup_theme`. Le text-domain reste un littéral à l'intérieur : `wp i18n
+  make-pot` continue de l'extraire normalement
+- **`Timber::get_menu_by( 'location', … )` et non `Timber::get_menu( $location )`** :
+  `MenuFactory::from()` retombe sur une résolution par slug puis par nom si aucun menu n'est
+  affecté à l'emplacement, avec le risque documenté par la classe elle-même de retourner un menu
+  dont le slug ou le nom coïncide avec l'emplacement demandé
+- **Les tirets d'un emplacement sont normalisés en underscore** dans la clé de contexte
+  (`main-nav` → `main_nav_menu`) : Twig lirait `{{ main-nav_menu }}` comme une soustraction
+- Aucun défaut : `locations` est obligatoire, une `ArgumentCountError` sanctionne l'omission — les
+  emplacements et leurs libellés appartiennent au projet, rien n'est deviné à sa place
+
+**Impact projet :** nécessite une modification du provider — ajouter `new Menus( locations: … )` à
+`SetupServiceProvider`. Sans cela la feature reste inerte.
+
+---
+
 ## [1.2.0] — 2026-08-22
 
 ### Ajouté
