@@ -12,6 +12,38 @@ le diff six mois plus tard :
 
 ---
 
+## [1.4.0] — 2026-08-25
+
+### Ajouté
+
+- `Features\Front\Favicons` — expose au contexte Twig global, sous la clé `favicons`, les URLs du
+  jeu de favicons (mode clair et sombre) et les couleurs de marque `theme_color_light`/
+  `theme_color_dark`. Ne génère aucun fichier ni aucun HTML : les fichiers sont produits par
+  `bin/generate-favicons.mjs` (thème), le rendu par `partials/favicon.twig` (thème)
+
+### Notes
+
+- **Front uniquement** — aucune icône d'administration ni de page de connexion. Sans rapport avec
+  `Admin\DisableSiteIcon`, qui masque un champ de réglage indépendant
+- `theme_color_light`/`theme_color_dark` n'ont pas de valeur par défaut, comme
+  `AdminColorScheme::$palette` : les omettre lève une `ArgumentCountError` au démarrage
+- La variante sombre (`favicon-dark.svg`) est détectée par présence de fichier sur disque, jamais
+  par un booléen déclaré au constructeur : évite qu'un flag diverge du contenu réel de
+  `dist/assets/favicons/` généré par le script Node
+- Sans build disponible (`npm run favicons:generate`/`npm run build` jamais lancé), le contexte
+  expose `favicons: null` — au template de s'effacer
+- URLs résolues via `Support\ViteManifest::asset_url()`, déjà générique pour tout fichier statique
+  sous `dist/assets/` — aucune nouvelle classe de résolution
+
+**Impact projet :** nécessite une modification du provider — ajouter
+`new Favicons( theme_color_light: …, theme_color_dark: … )` à `FrontServiceProvider` — **et** le
+portage manuel de `bin/generate-favicons.mjs`, `bin/favicons.config.mjs`,
+`partials/favicon.twig` (+ son inclusion dans `base.twig`), et les sources SVG
+(`resources/images/favicon-light.svg`), le socle ne les fournissant pas. Sans ces gestes la feature
+reste inerte.
+
+---
+
 ## [1.3.0] — 2026-08-24
 
 ### Ajouté

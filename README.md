@@ -182,6 +182,10 @@ Le socle ne construit ni n'enfile d'assets lui-même : il lit ce que le build du
 - Entrées attendues par défaut : `resources/js/app.js`, `resources/js/login.js`,
   `resources/scss/admin-colors.scss` (paramétrable via `AdminColorScheme( entry: … )`),
   `resources/scss/editor-gutenberg.scss` (paramétrable via `EditorStyles( entry: … )`)
+- `dist/assets/favicons/*` — jeu de favicons généré par `bin/generate-favicons.mjs` (thème), hors
+  du graphe Vite (fichiers statiques non hashés). Lu par `Features\Front\Favicons` via
+  `ViteManifest::asset_url()`, qui résout n'importe quel fichier sous `dist/assets/`, hashé ou
+  non — aucune classe de résolution dédiée
 
 Les deux entrées SCSS sont des **entrées CSS pures**, sans JS d'accompagnement, et sont toujours
 servies depuis `dist/assets/` : c'est WordPress qui les lit, jamais le navigateur via le dev server.
@@ -205,4 +209,7 @@ Les modifier impose un `npm run build`, même en `npm run dev`.
 - [ ] Upload d'un SVG valide accepté, d'un SVG malformé refusé
 - [ ] Apparence → Menus : les emplacements déclarés apparaissent, libellés traduits ; un menu affecté
       s'affiche au bon endroit, un emplacement non pourvu reste silencieusement vide
+- [ ] Favicon visible en onglet, variantes claire/sombre correctes (émulation
+      `prefers-color-scheme` des DevTools), fallback `.ico` visible dans un navigateur qui ignore
+      le SVG favicon, `site.webmanifest` sans erreur de parsing (DevTools → Application → Manifest)
 - [ ] Aucun notice avec `WP_DEBUG` activé
