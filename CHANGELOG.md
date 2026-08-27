@@ -12,6 +12,30 @@ le diff six mois plus tard :
 
 ---
 
+## [1.6.0] — 2026-08-27
+
+### Ajouté
+
+- `Features\Setup\TwigDump` — fonction Twig `dump()` rendue via Symfony VarDumper (`HtmlDumper`),
+  remplace le `dump()` natif de Twig (`Twig\Extension\DebugExtension`, basé sur `var_dump`), y
+  compris quand `WP_DEBUG`/le mode debug Twig est actif
+
+### Notes
+
+- `symfony/var-dumper` est déclarée en `require-dev` du socle, sans effet transitif chez un
+  consommateur : c'est le `require-dev` du **projet** qui rend la classe disponible. Sans elle, la
+  feature se neutralise silencieusement (`class_exists()`) — comportement attendu en production
+  (`composer install --no-dev`)
+- Aucun conflit de nom avec le `dump()` de Twig : les fonctions ajoutées via `addFunction()` passent
+  par une extension de staging initialisée en dernier, qui écrase donc celle des extensions
+  déclarées
+
+**Impact projet :** nécessite une modification du provider — ajouter `new TwigDump()` à
+`SetupServiceProvider`, et déclarer `symfony/var-dumper` dans le `require-dev` du projet si ce n'est
+pas déjà fait.
+
+---
+
 ## [1.5.0] — 2026-08-27
 
 ### Ajouté
