@@ -146,7 +146,9 @@ final class SeoPanel implements FeatureInterface {
             ],
             'descriptionLimit' => self::DESCRIPTION_LIMIT,
             'descriptionLabel' => __( 'Meta description', 'wp-theme-core' ),
+            /* translators: 1: nombre de caractères saisis, 2: limite recommandée */
             'descriptionHelp'  => __( '%1$d/%2$d caractères', 'wp-theme-core' ),
+            /* translators: 1: nombre de caractères saisis, 2: limite recommandée */
             'descriptionOver'  => __( '%1$d caractères — au-delà des %2$d recommandés par Google', 'wp-theme-core' ),
             'sitemapTitle'     => __( 'Sitemap', 'wp-theme-core' ),
             'sitemapLabel'     => __( 'Inclure cette page dans le sitemap', 'wp-theme-core' ),

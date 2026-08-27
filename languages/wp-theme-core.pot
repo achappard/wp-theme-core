@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-22T11:26:25+00:00\n"
+"POT-Creation-Date: 2026-08-27T12:52:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-theme-core\n"
@@ -57,4 +57,36 @@ msgstr ""
 
 #: Features/Security/HideLoginErrors.php:61
 msgid "Identifiant ou mot de passe incorrect."
+msgstr ""
+
+#: Features/Seo/SeoPanel.php:142
+msgid "SEO"
+msgstr ""
+
+#: Features/Seo/SeoPanel.php:148
+msgid "Meta description"
+msgstr ""
+
+#. translators: 1: nombre de caractères saisis, 2: limite recommandée
+#: Features/Seo/SeoPanel.php:150
+#, php-format
+msgid "%1$d/%2$d caractères"
+msgstr ""
+
+#. translators: 1: nombre de caractères saisis, 2: limite recommandée
+#: Features/Seo/SeoPanel.php:152
+#, php-format
+msgid "%1$d caractères — au-delà des %2$d recommandés par Google"
+msgstr ""
+
+#: Features/Seo/SeoPanel.php:153
+msgid "Sitemap"
+msgstr ""
+
+#: Features/Seo/SeoPanel.php:154
+msgid "Inclure cette page dans le sitemap"
+msgstr ""
+
+#: Features/Seo/SeoPanel.php:155
+msgid "Désactiver retire ce contenu des sitemaps XML générés par WordPress."
 msgstr ""

@@ -12,6 +12,17 @@ le diff six mois plus tard :
 
 ---
 
+## [1.7.1] — 2026-08-27
+
+### Corrigé
+
+- Catalogue de traduction (`languages/`) régénéré : les chaînes de `Features\Seo\SeoPanel` (v1.7.0)
+  n'avaient pas de traduction anglaise
+- Commentaires `translators:` ajoutés pour les deux chaînes à placeholders de `SeoPanel`
+- `Report-Msgid-Bugs-To` corrigé vers l'adresse `deefuse.fr`
+
+**Impact projet :** aucun — `composer update` suffit.
+
 ## [1.7.0] — 2026-08-27
 
 ### Ajouté
