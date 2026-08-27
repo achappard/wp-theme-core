@@ -12,6 +12,23 @@ le diff six mois plus tard :
 
 ---
 
+## [1.5.0] — 2026-08-27
+
+### Ajouté
+
+- `Features\Seo\DocumentTitle` accepte désormais un séparateur au constructeur (`$separator`), au
+  lieu d'une constante figée
+
+### Modifié
+
+- Le séparateur par défaut passe de `★` à `/`
+
+**Impact projet :** à vérifier visuellement — `composer update` suffit à faire fonctionner le code,
+mais tout projet qui instancie `new DocumentTitle()` sans argument voit son `<title>` changer de
+séparateur. Passer `new DocumentTitle( separator: '★' )` pour conserver l'ancien rendu.
+
+---
+
 ## [1.4.0] — 2026-08-25
 
 ### Ajouté

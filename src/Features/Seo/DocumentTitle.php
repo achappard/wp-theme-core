@@ -14,9 +14,9 @@ use Deefuse\ThemeCore\Contracts\FeatureInterface;
 /**
  * Point d'entrée unique pour façonner le `<title>` du site.
  *
- * Seul le séparateur est arrêté à ce stade. La composition des parties reste
- * neutre — `filter_parts()` renvoie la valeur du core telle quelle — en attendant
- * que les règles de titrage soient définies.
+ * Le séparateur est configurable au constructeur. La composition des parties
+ * reste neutre — `filter_parts()` renvoie la valeur du core telle quelle — en
+ * attendant que les règles de titrage soient définies.
  *
  * Prérequis : `add_theme_support( 'title-tag' )`, posé par `Setup\ThemeSupport`.
  * Sans lui, `wp_get_document_title()` n'est jamais appelée et ces filtres non plus.
@@ -27,12 +27,19 @@ use Deefuse\ThemeCore\Contracts\FeatureInterface;
 final class DocumentTitle implements FeatureInterface {
 
     /**
-     * Séparateur inséré entre les parties du titre.
+     * Séparateur par défaut inséré entre les parties du titre.
      *
-     * Étoile pleine (★, U+2605). Ce n'est pas une chaîne de langue mais un choix
-     * typographique : il ne passe pas par les fonctions i18n.
+     * Ce n'est pas une chaîne de langue mais un choix typographique : il ne
+     * passe pas par les fonctions i18n.
      */
-    private const SEPARATOR = '★';
+    private const DEFAULT_SEPARATOR = '/';
+
+    /**
+     * @param string $separator Séparateur inséré entre les parties du titre.
+     */
+    public function __construct(
+        private readonly string $separator = self::DEFAULT_SEPARATOR,
+    ) {}
 
     /** Enregistre les filtres de composition du titre. */
     public function register(): void {
@@ -47,13 +54,13 @@ final class DocumentTitle implements FeatureInterface {
      * (cf. wp-includes/default-filters.php), qui convertit le `-` entouré
      * d'espaces en `&#8211;` via une chaîne traduisible
      * (`_x( '&#8211;', 'en dash' )`) — le rendu dépendrait donc de la locale.
-     * La constante donne un résultat déterministe.
+     * Un séparateur fixé par le constructeur donne un résultat déterministe.
      *
      * @param string $separator Séparateur par défaut du core.
      * @return string Séparateur à utiliser.
      */
     public function filter_separator( string $separator ): string {
-        return self::SEPARATOR;
+        return $this->separator;
     }
 
     /**
