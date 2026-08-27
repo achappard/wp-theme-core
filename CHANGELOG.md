@@ -12,6 +12,42 @@ le diff six mois plus tard :
 
 ---
 
+## [1.7.0] — 2026-08-27
+
+### Ajouté
+
+- `Features\Seo\MetaDescription` — balise `<meta name="description">` sur les contenus singuliers,
+  depuis une meta de post (`_deefuse_seo_description`), repli sur l'extrait de l'article
+- `Features\Seo\SitemapExclusion` — exclusion individuelle du sitemap XML (meta
+  `_deefuse_seo_exclude_from_sitemap`), via le filtre `wp_sitemaps_posts_query_args`
+- `Features\Seo\OpenGraph` — balises `og:*` et `twitter:*` sur les contenus singuliers, filtre unique
+  `deefuse/seo/open_graph_tags` pour surcharge par le projet
+- `Features\Seo\SeoPanel` — panneau « SEO » du document Gutenberg (description + inclusion sitemap),
+  seule classe des quatre à appeler `register_post_meta()`
+
+### Notes
+
+- `MetaDescription`, `SitemapExclusion` et `OpenGraph` fonctionnent en lecture seule
+  (`get_post_meta()`), sans dépendre de `SeoPanel` pour s'exécuter — c'est `SeoPanel` qui dépend de
+  leurs constantes `META_KEY`, jamais l'inverse
+- `OpenGraph` traite son image de repli (`og:image`/`twitter:image`) exactement comme
+  `Front\Favicons` traite ses fichiers générés : `ViteManifest` en dépendance optionnelle,
+  vérification d'existence avant de construire l'URL, balises omises (pas cassées) si
+  `dist/assets/image-og-default.png` n'a jamais été généré par `bin/generate-og-image.mjs` (nouveau
+  script côté thème, voir sa documentation) — `new OpenGraph()` ne prend donc aucun argument
+  obligatoire
+- `image-og-default.png` est un placeholder généré (fond blanc, nom du thème en noir centré), à
+  remplacer par une vraie image de marque 1200×630 dès que la charte existe
+- Un plugin SEO tiers (Yoast, Rank Math) rend ces quatre features redondantes — pas de détection
+  automatique, à retirer du provider en pareil cas
+
+**Impact projet :** nécessite une modification du provider — ajouter `new MetaDescription()`,
+`new SitemapExclusion()`, `new SeoPanel( $context )` et `new OpenGraph()` à `SeoServiceProvider` — et
+porter `bin/generate-og-image.mjs` ainsi que le script `og-image:generate` de `package.json` (non
+fournis par le socle, propres au thème comme `bin/generate-favicons.mjs`).
+
+---
+
 ## [1.6.0] — 2026-08-27
 
 ### Ajouté
