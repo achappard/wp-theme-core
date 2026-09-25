@@ -12,6 +12,24 @@ le diff six mois plus tard :
 
 ---
 
+## [1.8.0] — 2026-09-25
+
+### Ajouté
+
+- `Features\Admin\DisableFunctionalities\DisableGutenberg` — remplace l'éditeur de blocs par
+  l'éditeur classique pour tous les types de contenus, CPT futurs compris (filtre
+  `use_block_editor_for_post_type`), ainsi que sur l'écran des widgets (`use_widgets_block_editor`)
+
+### Notes
+
+- Les features propres à l'éditeur de blocs deviennent sans effet une fois celle-ci active :
+  `Admin\ShowHidePageTitle`, `Seo\SeoPanel`, `DisableBlocks`, `DisableNativeBlockSupports`. Retirer
+  `SeoPanel` retire aussi l'interface de saisie des metas lues par `MetaDescription` et
+  `SitemapExclusion`, qui continuent de fonctionner (repli sur l'extrait pour la description)
+
+**Impact projet :** aucun — opt-in, `new DisableGutenberg()` à ajouter à `AdminServiceProvider`
+pour les projets sans éditeur de blocs.
+
 ## [1.7.1] — 2026-08-27
 
 ### Corrigé
