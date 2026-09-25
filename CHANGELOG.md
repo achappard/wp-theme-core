@@ -12,6 +12,28 @@ le diff six mois plus tard :
 
 ---
 
+## [1.9.0] — 2026-09-25
+
+### Modifié
+
+- `Features\Admin\DisableFunctionalities\DisableLockAppearanceTools` :
+  - la redirection laisse passer l'« Aperçu en direct » d'un **autre** thème que le thème actif
+    (`customize.php?theme={slug}` pour un thème classique, `site-editor.php?wp_theme_preview={slug}`
+    pour un thème à blocs), jusqu'ici renvoyé sur Apparence > Thèmes pour les thèmes à blocs ;
+    Personnaliseur, Éditeur de site et Polices restent bloqués pour le thème actif
+  - le bouton « Personnaliser » du thème actif (carte et fiche détaillée) et ses liens d'en-tête /
+    d'arrière-plan sont masqués sur Apparence > Thèmes : ils menaient à la redirection, sans
+    explication
+  - `wp_redirect()` remplacé par `wp_safe_redirect()`
+
+### Notes
+
+- Pas de retrait de la capability `customize` : l'aperçu d'un thème classique passe par le
+  Personnaliseur lui-même, il disparaîtrait avec
+
+**Impact projet :** à vérifier visuellement — Apparence > Thèmes n'affiche plus de bouton
+« Personnaliser » sur le thème actif ; « Aperçu en direct » des autres thèmes fonctionne.
+
 ## [1.8.0] — 2026-09-25
 
 ### Ajouté
