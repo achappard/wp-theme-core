@@ -12,6 +12,31 @@ le diff six mois plus tard :
 
 ---
 
+## [1.10.0] — 2026-09-29
+
+### Ajouté
+
+- `Features\Admin\ConvertUploadsToWebp` — convertit en WebP les JPEG et PNG déposés dans la
+  médiathèque, sur le filtre `wp_handle_upload`, **avant** la génération des miniatures : fichier
+  principal, version `-scaled` et toutes les tailles sortent en WebP, l'original est supprimé.
+  Couvre l'upload de la médiathèque et celui de l'éditeur de blocs (REST, `sideload`)
+  - JPEG → WebP à `quality:` (défaut 90), orientation EXIF appliquée aux pixels avant conversion
+  - PNG encodé sans perte (Imagick, repli GD) **et** à `quality:` ; la version avec perte n'est gardée
+    que si elle allège d'au moins `png_lossy_min_saving:` (défaut `0.5`, `1.0` = toujours sans perte) —
+    une photo enregistrée en PNG passe avec perte, un logo ou une capture reste pixel pour pixel
+  - `image_editor_output_format` mappe les mêmes types vers WebP pour les tailles générées plus tard
+  - `wp_client_side_media_processing_enabled` forcé à `false` : le traitement des images dans le
+    navigateur (WordPress 7.1, actif en HTTPS ou sur `localhost`) court-circuiterait la conversion
+
+### Notes
+
+- Nécessite Imagick ou GD compilé avec WebP sur le serveur ; sinon, ou en cas d'échec de conversion,
+  l'upload se fait normalement dans son format d'origine
+- Les métadonnées IPTC / EXIF (légende, crédit, appareil) ne survivent pas à la conversion
+- Les médias déjà présents ne sont pas convertis
+
+**Impact projet :** aucun — opt-in, `new ConvertUploadsToWebp()` à ajouter à `AdminServiceProvider`.
+
 ## [1.9.0] — 2026-09-25
 
 ### Modifié

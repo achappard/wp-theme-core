@@ -207,6 +207,9 @@ Les modifier impose un `npm run build`, même en `npm run dev`.
       disparaît et réapparaît sans recharger, **l'état survit à un rechargement (F5)** et vaut pour
       toutes les pages — c'est un réglage global
 - [ ] Upload d'un SVG valide accepté, d'un SVG malformé refusé
+- [ ] Si `ConvertUploadsToWebp` est enregistrée : un JPEG et un PNG déposés (médiathèque **et** bloc
+      Image de l'éditeur) ressortent en `.webp`, miniatures comprises, sans JPEG / PNG résiduel dans
+      `uploads/` ; une photo de smartphone en portrait reste droite ; un PNG transparent le reste
 - [ ] Apparence → Menus : les emplacements déclarés apparaissent, libellés traduits ; un menu affecté
       s'affiche au bon endroit, un emplacement non pourvu reste silencieusement vide
 - [ ] Favicon visible en onglet, variantes claire/sombre correctes (émulation
