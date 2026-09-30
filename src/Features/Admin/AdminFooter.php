@@ -17,7 +17,7 @@ final class AdminFooter implements FeatureInterface {
     /**
      * @param string $agency_name Nom de l'agence affiché dans le pied de page.
      * @param string $agency_url  URL du site de l'agence.
-     * @param string $agency_desc Courte description de l'agence.
+     * @param string $agency_desc Courte description de l'agence ; vide, elle est omise avec son tiret.
      */
     public function __construct(
         private readonly string $agency_name,
@@ -36,6 +36,8 @@ final class AdminFooter implements FeatureInterface {
      * Le lien est assemblé hors de la chaîne traduisible : le traducteur ne
      * manipule que des marqueurs, jamais de balises. Une traduction fautive peut
      * au pire déplacer ou omettre un marqueur, pas produire du HTML cassé.
+     *
+     * Sans description, une chaîne distincte évite le tiret orphelin (« Une création X — »).
      */
     public function replace_footer_text(): string {
         $link = sprintf(
@@ -43,6 +45,14 @@ final class AdminFooter implements FeatureInterface {
             esc_url( $this->agency_url ),
             esc_html( $this->agency_name )
         );
+
+        if ( '' === trim( $this->agency_desc ) ) {
+            return sprintf(
+                /* translators: %s: lien vers le site de l'agence */
+                __( 'Une création %s', 'wp-theme-core' ),
+                $link
+            );
+        }
 
         return sprintf(
             /* translators: 1: lien vers le site de l'agence, 2: description de l'agence */

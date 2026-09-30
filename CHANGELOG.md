@@ -12,6 +12,16 @@ le diff six mois plus tard :
 
 ---
 
+## [1.10.1] — 2026-09-30
+
+### Corrigé
+
+- `Features\Admin\AdminFooter` — avec `agency_desc: ''`, le pied de page affichait un tiret orphelin
+  (« Une création Agence — »). Une description vide (ou faite d'espaces) donne désormais
+  « Une création Agence », via une chaîne traduisible distincte (`Une création %s`, traduite en `en_US`)
+
+**Impact projet :** aucun — `composer update deefuse/wp-theme-core` suffit.
+
 ## [1.10.0] — 2026-09-29
 
 ### Ajouté
