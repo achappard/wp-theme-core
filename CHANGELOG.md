@@ -12,6 +12,19 @@ le diff six mois plus tard :
 
 ---
 
+## [1.13.0] — 2026-09-30
+
+### Ajouté
+
+- `Features\Admin\DisableFunctionalities\DisablePostByEmail` — désactive la publication par e-mail
+  avec le filtre `enable_post_by_email_configuration`. La section « Publier par e-mail » de
+  *Réglages › Écriture* et son aide disparaissent, les options `mailserver_*` ne sont plus
+  enregistrables, et `wp-mail.php` répond 403 avant toute connexion POP3. Fonction inutile sur un
+  thème à blocs (contenu importé en HTML brut) ; elle stocke aussi le mot de passe de la boîte en
+  clair et laisse un endpoint public ouvert
+
+**Impact projet :** aucun — opt-in, `new DisablePostByEmail()` à ajouter à `AdminServiceProvider`.
+
 ## [1.12.0] — 2026-09-30
 
 ### Ajouté
