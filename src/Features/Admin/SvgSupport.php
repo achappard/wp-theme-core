@@ -10,11 +10,10 @@ declare(strict_types=1);
 namespace Deefuse\ThemeCore\Features\Admin;
 
 use Deefuse\ThemeCore\Contracts\FeatureInterface;
-use DOMComment;
 use DOMDocument;
-use DOMDocumentType;
 use DOMElement;
-use DOMProcessingInstruction;
+use enshrined\svgSanitize\Sanitizer;
+use Exception;
 
 /**
  * Autorise l'upload de SVG dans la médiathèque, en assainissant chaque fichier
@@ -25,6 +24,12 @@ use DOMProcessingInstruction;
  * pour cette raison. La feature ne se contente donc pas d'ajouter le type MIME —
  * elle réécrit le fichier débarrassé de tout ce qui peut s'exécuter, et rejette
  * l'upload si le document n'est pas un SVG lisible.
+ *
+ * L'assainissement est confié à `enshrined/svg-sanitize` (celui de Safe SVG et de
+ * WordPress VIP) : une liste blanche d'éléments et d'attributs, et de schémas d'URL.
+ * Une liste noire maison laissait passer `java&#9;script:` — l'entité décodée par le
+ * parseur, puis ignorée par le navigateur — ou un `href` sous un préfixe XLink
+ * arbitraire.
  */
 final class SvgSupport implements FeatureInterface {
 
@@ -40,40 +45,12 @@ final class SvgSupport implements FeatureInterface {
      */
     private const REQUIRED_CAPABILITY = 'upload_files';
 
-    /**
-     * Éléments retirés du document, quels que soient leurs attributs.
-     *
-     * Tous permettent soit d'exécuter du code (`script`, `handler`), soit d'embarquer
-     * un document tiers dans le SVG (`iframe`, `object`, `foreignObject`…), ce qui
-     * rouvre par la bande la surface qu'on cherche à fermer.
-     */
-    private const FORBIDDEN_ELEMENTS = [
-        'script',
-        'handler',
-        'listener',
-        'foreignobject',
-        'iframe',
-        'frame',
-        'frameset',
-        'embed',
-        'object',
-        'annotation-xml',
-        'noscript',
-        'audio',
-        'video',
-    ];
-
-    /** Attributs référençant une ressource, dont la valeur doit être validée. */
-    private const URL_ATTRIBUTES = [ 'href', 'xlink:href', 'src', 'from', 'to', 'values', 'by' ];
-
-    /** Motifs interdits dans une valeur d'attribut ou une feuille de style interne. */
-    private const DANGEROUS_PATTERN = '/(javascript\s*:|vbscript\s*:|data\s*:\s*text|expression\s*\(|@import|behavior\s*:|-moz-binding)/i';
-
     /** Enregistre les hooks d'autorisation, d'assainissement et d'affichage. */
     public function register(): void {
         add_filter( 'upload_mimes', [ $this, 'allow_svg_mime' ] );
         add_filter( 'wp_check_filetype_and_ext', [ $this, 'resolve_svg_filetype' ], 10, 4 );
         add_filter( 'wp_handle_upload_prefilter', [ $this, 'sanitize_uploaded_file' ] );
+        add_filter( 'wp_handle_sideload_prefilter', [ $this, 'sanitize_uploaded_file' ] );
         add_filter( 'wp_prepare_attachment_for_js', [ $this, 'add_svg_dimensions' ], 10, 2 );
         add_filter( 'wp_get_attachment_image_src', [ $this, 'fill_svg_image_src' ], 10, 2 );
         add_action( 'admin_head', [ $this, 'print_preview_styles' ] );
@@ -136,6 +113,11 @@ final class SvgSupport implements FeatureInterface {
      * illisible ou non conforme fait échouer l'upload avec un message explicite,
      * plutôt que d'être stocké tel quel.
      *
+     * Branché sur les deux préfiltres : `wp_handle_upload()` (formulaire, upload
+     * multipart de l'API REST) et `wp_handle_sideload()` (corps brut envoyé à
+     * `POST /wp/v2/media`, `media_handle_sideload()`). Un seul des deux laisserait
+     * l'autre chemin écrire le SVG sans nettoyage.
+     *
      * @param array<string, mixed> $file Fichier en cours d'upload (`name`, `type`, `tmp_name`, `error`, `size`).
      *
      * @return array<string, mixed>
@@ -185,147 +167,59 @@ final class SvgSupport implements FeatureInterface {
      * Renvoie le SVG débarrassé de tout ce qui peut s'exécuter, ou `null` si le
      * document n'est pas un SVG exploitable.
      *
-     * Les déclarations d'entités sont rejetées en amont du parseur plutôt que
-     * filtrées : elles n'ont aucun usage légitime dans un SVG exporté par un outil
-     * de dessin, et sont le support des attaques XXE et « billion laughs ».
+     * Les déclarations d'entités sont rejetées en amont plutôt que filtrées : elles
+     * n'ont aucun usage légitime dans un SVG exporté par un outil de dessin, et sont
+     * le support des attaques XXE et « billion laughs ». Les références distantes
+     * (URL http, `@import`, `url()` d'une feuille de style) sont retirées : elles
+     * feraient fuiter chaque affichage vers un tiers.
      */
     private function sanitize_markup( string $content ): ?string {
         $content = trim( $content );
 
-        if ( '' === $content || preg_match( '/<!ENTITY/i', $content ) ) {
+        if ( '' === $content || preg_match( '/<!ENTITY/i', $content ) || ! $this->is_svg_document( $content ) ) {
             return null;
         }
 
+        $sanitizer = new Sanitizer();
+        $sanitizer->removeRemoteReferences( true );
+        $sanitizer->removeXMLTag( true );
+
+        // La bibliothèque lève une exception sur un `<use>` qui se référence lui-même ou
+        // sur des `<use>` imbriqués au-delà de sa limite (parade « billion laughs ») : un refus.
+        try {
+            $markup = $sanitizer->sanitize( $content );
+        } catch ( Exception ) {
+            return null;
+        }
+
+        // Contrôle répété en sortie : une racine que la liste blanche ne reconnaît pas
+        // (`<s:svg>`) est retirée avec tout son contenu, laissant un document vide.
+        if ( ! is_string( $markup ) || ! $this->is_svg_document( $markup ) ) {
+            return null;
+        }
+
+        return '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . trim( $markup ) . "\n";
+    }
+
+    /**
+     * Indique si le contenu est un document XML bien formé dont la racine est `<svg>`.
+     *
+     * La liste blanche retire les éléments inconnus, pas le document qui les porte :
+     * sans ce contrôle, un fichier XHTML renommé en `.svg` en ressortirait vidé mais
+     * accepté.
+     */
+    private function is_svg_document( string $content ): bool {
         $previous_state = libxml_use_internal_errors( true );
 
-        $dom                     = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $loaded                  = $dom->loadXML( $content, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING );
+        $dom    = new DOMDocument();
+        $loaded = $dom->loadXML( $content, LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING );
 
         libxml_clear_errors();
         libxml_use_internal_errors( $previous_state );
 
-        if ( ! $loaded || ! $dom->documentElement instanceof DOMElement ) {
-            return null;
-        }
-
-        if ( 'svg' !== strtolower( $dom->documentElement->localName ) ) {
-            return null;
-        }
-
-        foreach ( iterator_to_array( $dom->childNodes ) as $node ) {
-            if ( $node instanceof DOMDocumentType || $node instanceof DOMProcessingInstruction ) {
-                $dom->removeChild( $node );
-            }
-        }
-
-        $this->clean_element( $dom->documentElement );
-
-        $markup = $dom->saveXML( $dom->documentElement );
-
-        if ( false === $markup ) {
-            return null;
-        }
-
-        return '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $markup . "\n";
-    }
-
-    /** Nettoie récursivement un élément : ses attributs, puis ses enfants. */
-    private function clean_element( DOMElement $element ): void {
-        foreach ( iterator_to_array( $element->attributes ) as $attribute ) {
-            if ( ! $this->is_attribute_allowed( $attribute->nodeName, (string) $attribute->nodeValue ) ) {
-                $element->removeAttribute( $attribute->nodeName );
-            }
-        }
-
-        foreach ( iterator_to_array( $element->childNodes ) as $child ) {
-            if ( $child instanceof DOMComment || $child instanceof DOMProcessingInstruction ) {
-                $element->removeChild( $child );
-
-                continue;
-            }
-
-            if ( ! $child instanceof DOMElement ) {
-                continue;
-            }
-
-            $name = strtolower( $child->localName );
-
-            if ( in_array( $name, self::FORBIDDEN_ELEMENTS, true ) ) {
-                $element->removeChild( $child );
-
-                continue;
-            }
-
-            // `<animate>` et `<set>` peuvent réécrire un href à l'exécution : on ne
-            // garde que les animations qui portent sur une autre propriété.
-            if ( in_array( $name, [ 'animate', 'set' ], true ) && $this->targets_url_attribute( $child ) ) {
-                $element->removeChild( $child );
-
-                continue;
-            }
-
-            // Une feuille de style interne peut importer une ressource distante ou
-            // déclarer un comportement : elle tombe entière au premier motif suspect.
-            if ( 'style' === $name && preg_match( self::DANGEROUS_PATTERN, $child->textContent ) ) {
-                $element->removeChild( $child );
-
-                continue;
-            }
-
-            $this->clean_element( $child );
-        }
-    }
-
-    /** Indique si un attribut peut être conservé, d'après son nom et sa valeur. */
-    private function is_attribute_allowed( string $name, string $value ): bool {
-        $name = strtolower( $name );
-
-        // Gestionnaires d'événements : `onload`, `onclick`, `onmouseover`…
-        if ( str_starts_with( $name, 'on' ) ) {
-            return false;
-        }
-
-        if ( preg_match( self::DANGEROUS_PATTERN, $value ) ) {
-            return false;
-        }
-
-        if ( in_array( $name, self::URL_ATTRIBUTES, true ) ) {
-            return $this->is_url_allowed( $value );
-        }
-
-        return true;
-    }
-
-    /**
-     * Restreint les références externes aux seuls usages légitimes d'un SVG statique.
-     *
-     * Un fragment interne (`#gradient-1`) couvre les `<use>`, dégradés et masques ;
-     * une image bitmap embarquée en `data:` couvre les exports contenant une photo.
-     * Tout le reste — URL http, protocole relatif, chemin de fichier — est écarté :
-     * il ferait fuiter une visite vers un tiers, ou pointerait vers un document
-     * dont le contenu échappe à cet assainissement.
-     */
-    private function is_url_allowed( string $value ): bool {
-        $value = trim( $value );
-
-        if ( '' === $value || str_starts_with( $value, '#' ) ) {
-            return true;
-        }
-
-        // Valeur d'animation sans URL (couleur, coordonnée, opacité…).
-        if ( ! preg_match( '/^[a-z0-9.+-]*:|^\/\//i', $value ) ) {
-            return true;
-        }
-
-        return (bool) preg_match( '#^data:image/(png|jpe?g|gif|webp);base64,#i', $value );
-    }
-
-    /** Indique si une animation cible un attribut de type URL. */
-    private function targets_url_attribute( DOMElement $element ): bool {
-        $target = strtolower( $element->getAttribute( 'attributeName' ) );
-
-        return in_array( $target, self::URL_ATTRIBUTES, true );
+        return $loaded
+            && $dom->documentElement instanceof DOMElement
+            && 'svg' === strtolower( $dom->documentElement->localName );
     }
 
     /**

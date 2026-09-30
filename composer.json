@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": ">=8.5",
+        "enshrined/svg-sanitize": "^1.0",
         "timber/timber": "^2.3"
     },
     "require-dev": {

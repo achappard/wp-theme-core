@@ -206,7 +206,9 @@ Les modifier impose un `npm run build`, même en `npm run dev`.
 - [ ] Éditeur : interrupteur « Afficher le titre » présent sur une page, le champ titre du canvas
       disparaît et réapparaît sans recharger, **l'état survit à un rechargement (F5)** et vaut pour
       toutes les pages — c'est un réglage global
-- [ ] Upload d'un SVG valide accepté, d'un SVG malformé refusé
+- [ ] Upload d'un SVG valide accepté, d'un SVG malformé refusé ; un SVG piégé
+      (`<a href="java&#9;script:alert(1)">`) accepté mais nettoyé : plus de `href` dans le fichier
+      écrit dans `uploads/`
 - [ ] Si `ConvertUploadsToWebp` est enregistrée : un JPEG et un PNG déposés (médiathèque **et** bloc
       Image de l'éditeur) ressortent en `.webp`, miniatures comprises, sans JPEG / PNG résiduel dans
       `uploads/` ; une photo de smartphone en portrait reste droite ; un PNG transparent le reste

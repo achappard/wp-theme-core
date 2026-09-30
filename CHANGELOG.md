@@ -12,6 +12,33 @@ le diff six mois plus tard :
 
 ---
 
+## [1.10.2] — 2026-09-30
+
+### Sécurité
+
+- `Features\Admin\SvgSupport` — XSS stockée dans l'assainissement des SVG. La liste noire maison
+  laissait passer un `href` écrit `java&#9;script:…` (ou avec `&#10;`) : le parseur XML décode
+  l'entité en tabulation, que ni le motif interdit ni le contrôle de schéma ne reconnaissaient, et le
+  navigateur la retire de l'URL. Un clic sur le lien du SVG ouvert depuis `uploads/` exécutait alors
+  du JavaScript sur l'origine du site. Même contournement avec un préfixe XLink arbitraire
+  (`xmlns:x="http://www.w3.org/1999/xlink"` puis `x:href`), les attributs étant comparés sur leur nom
+  qualifié. L'assainissement est désormais confié à **`enshrined/svg-sanitize`** (liste blanche
+  d'éléments, d'attributs et de schémas d'URL, celle de Safe SVG et de WordPress VIP), références
+  distantes retirées. Restent propres au socle : le rejet des `<!ENTITY`, le contrôle d'une racine
+  `<svg>` avant et après nettoyage, et le refus d'un `<use>` autoréférent ou trop imbriqué (exception
+  de la bibliothèque)
+- `Features\Admin\SvgSupport` — l'assainissement n'était branché que sur
+  `wp_handle_upload_prefilter` : un SVG envoyé en corps brut à `POST /wp/v2/media` (ou via
+  `media_handle_sideload()`) passe par `wp_handle_sideload()` et atterrissait **sans aucun
+  nettoyage**, pour tout compte ayant `upload_files`. Le même callback est désormais branché sur
+  `wp_handle_sideload_prefilter`
+- Nouvelle dépendance `require` : `enshrined/svg-sanitize` `^1.0` (`ext-dom`, `ext-libxml`, sans autre
+  dépendance)
+
+**Impact projet :** aucun — `composer update deefuse/wp-theme-core` suffit (la nouvelle dépendance
+suit). Les SVG déjà présents dans la médiathèque ne sont pas repassés : les ré-uploader si un doute
+existe sur leur provenance.
+
 ## [1.10.1] — 2026-09-30
 
 ### Corrigé
