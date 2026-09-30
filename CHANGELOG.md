@@ -12,6 +12,20 @@ le diff six mois plus tard :
 
 ---
 
+## [1.12.0] — 2026-09-30
+
+### Ajouté
+
+- `Features\Setup\ThemeSupport` — paramètre `extra_supports:` (défaut `[]`), pour déclarer les
+  supports propres au projet en plus du socle structurel : un nom seul (`'responsive-embeds'`,
+  `'align-wide'`), ou un nom associé à ses arguments (`'custom-logo' => [ 'height' => 80 ]`).
+  `responsive-embeds` est nécessaire dès que le bloc Embed est autorisé : sans lui, le `<body>` du
+  front n'a pas la classe `wp-embed-responsive`, et l'iframe garde la taille fixe renvoyée par oEmbed
+  (500 × 281 pour YouTube) alors que l'éditeur l'affiche en pleine largeur
+
+**Impact projet :** aucun par défaut — opt-in, `new ThemeSupport( extra_supports: [ 'responsive-embeds' ] )`
+dans `SetupServiceProvider`.
+
 ## [1.11.0] — 2026-09-30
 
 ### Ajouté

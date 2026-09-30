@@ -14,9 +14,11 @@ use Deefuse\ThemeCore\Contracts\FeatureInterface;
 /**
  * Déclare les fonctionnalités WordPress prises en charge par le thème.
  *
- * Socle structurel uniquement à ce stade. Les supports liés à l'éditeur de blocs
- * (`responsive-embeds`, `align-wide`, `editor-styles`, `appearance-tools`) et le
- * `custom-logo` restent à poser quand le design system sera défini.
+ * Pose toujours le socle structurel (`title-tag`, `automatic-feed-links`, `html5`,
+ * `post-thumbnails`). Les supports qui dépendent du projet — liés à l'éditeur de blocs
+ * (`responsive-embeds`, `align-wide`, `appearance-tools`) ou `custom-logo` — sont
+ * passés en argument `extra_supports:`. `editor-styles` n'en fait pas partie : il est
+ * posé par `Admin\EditorStyles`, avec la feuille qu'il déclare.
  */
 final class ThemeSupport implements FeatureInterface {
 
@@ -42,6 +44,15 @@ final class ThemeSupport implements FeatureInterface {
         'navigation-widgets',
     ];
 
+    /**
+     * @param array<int|string, mixed> $extra_supports Supports ajoutés au socle structurel : un nom seul
+     *                                                 (`'responsive-embeds'`), ou un nom associé à ses
+     *                                                 arguments (`'custom-logo' => [ 'height' => 80 ]`).
+     */
+    public function __construct(
+        private readonly array $extra_supports = [],
+    ) {}
+
     /** Enregistre la déclaration des supports de thème. */
     public function register(): void {
         add_action( 'after_setup_theme', [ $this, 'add_theme_supports' ] );
@@ -66,5 +77,14 @@ final class ThemeSupport implements FeatureInterface {
 
         // Images à la une (get_the_post_thumbnail, post.thumbnail côté Timber).
         add_theme_support( 'post-thumbnails' );
+
+        // Supports propres au projet.
+        foreach ( $this->extra_supports as $key => $value ) {
+            if ( is_int( $key ) ) {
+                add_theme_support( $value );
+            } else {
+                add_theme_support( $key, $value );
+            }
+        }
     }
 }
