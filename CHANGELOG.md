@@ -12,6 +12,22 @@ le diff six mois plus tard :
 
 ---
 
+## [1.11.0] — 2026-09-30
+
+### Ajouté
+
+- `Features\Admin\DisableFunctionalities\DisableUpdates` — paramètre `allow_minor_core:` (défaut
+  `false`). À `true`, les mises à jour automatiques **mineures** du core (x.y.**z**, les correctifs de
+  sécurité) ne sont plus bloquées : seuls `allow_major_auto_core_updates` reste à `false`, et
+  `allow_minor_auto_core_updates` / `auto_update_core` ne sont plus filtrés. Le test Site Health
+  `background_updates` est alors conservé, puisqu'il signale un vrai blocage. Extensions, thèmes et
+  traductions restent bloqués dans tous les cas
+- Le réglage du serveur garde le dernier mot : avec `AUTOMATIC_UPDATER_DISABLED` à `true` (ou
+  `WP_AUTO_UPDATE_CORE` à `false`) dans `wp-config.php`, aucune mise à jour automatique n'a lieu
+
+**Impact projet :** aucun par défaut — opt-in, `new DisableUpdates( allow_minor_core: true )` dans
+`AdminServiceProvider` ; recommandé en production.
+
 ## [1.10.2] — 2026-09-30
 
 ### Sécurité
