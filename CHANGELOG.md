@@ -12,6 +12,19 @@ le diff six mois plus tard :
 
 ---
 
+## [1.14.0] — 2026-09-30
+
+### Ajouté
+
+- `Features\Admin\DisableFunctionalities\DisableUpdateServices` — désactive les « Services de mise à
+  jour ». Le filtre `enable_update_services_configuration` masque la section de *Réglages ›
+  Écriture* et son aide, et `generic_ping` est retiré de `do_all_pings` : plus aucun ping
+  `weblogUpdates.ping` (Ping-O-Matic par défaut) à la publication d'un article. WordPress 7.1 les
+  coupe déjà hors production ; la feature les coupe aussi en production. Pingbacks et rétroliens ne
+  sont pas concernés
+
+**Impact projet :** aucun — opt-in, `new DisableUpdateServices()` à ajouter à `AdminServiceProvider`.
+
 ## [1.13.0] — 2026-09-30
 
 ### Ajouté
