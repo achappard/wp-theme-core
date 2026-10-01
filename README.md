@@ -5,6 +5,8 @@ de features génériques (sécurité, nettoyage du front, back-office, assets Vi
 
 **Le socle ne décide de rien.** Il expose des classes ; c'est le thème qui choisit lesquelles il
 enregistre, dans quel ordre, et avec quelles valeurs. Aucune feature ne s'active toute seule.
+Seule exception, qui n'est pas une feature : la page *Outils › Fonctionnalités du thème*, montée par le
+`Kernel` (cf. plus bas).
 
 - PHP ≥ 8.5 · WordPress ≥ 6.7 · Timber ^2.3
 - Namespace `Deefuse\ThemeCore\`, text-domain `wp-theme-core`
@@ -74,10 +76,35 @@ public static function features( ThemeContext $context ): array {
 
 1. **Retirer la ligne** du provider — la feature n'existe plus.
 2. **Changer un argument nommé** — la feature est paramétrée.
-3. **Écrire sa propre classe** implémentant `FeatureInterface` et la mettre à la place.
+3. **Écrire sa propre classe** implémentant `FeatureInterface` (`register()` et `description()`) et
+   la mettre à la place.
 4. ~~Hériter d'une classe du socle~~ — **à ne pas faire**. Les features sont `final` exprès : hériter
    d'une classe dont les internes changent en patch recrée exactement le risque que ce package existe
    pour supprimer. Le geste 3 coûte le même effort et ne crée aucune dette.
+
+### Page « Fonctionnalités du thème »
+
+Le `Kernel` monte sous **Outils** une page réservée aux administrateurs (`manage_options`), à l'adresse
+`tools.php?page={asset_prefix}-features`. Elle liste les features **réellement enregistrées**, un
+tableau par provider dans l'ordre de `functions.php` : nom court de la classe (le nom complet au
+survol), mention « (projet) » pour une classe hors du socle, et sa description.
+
+Ce n'est pas une feature : elle décrit le socle sans rendre de service au site, et aucun provider ne
+peut la retirer. Son code vit dans `Internal\ListingFeaturesPage`.
+
+La description vient de `FeatureInterface::description()`, **obligatoire** depuis la 2.0 : une phrase
+destinée à un administrateur, pas à un développeur, traduite avec `__()` et le text-domain en
+littéral — `'wp-theme-core'` dans le socle, celui du projet dans un thème :
+
+```php
+/** Courte description affichée sur la page « Fonctionnalités du thème ». */
+public function description(): string {
+    return __( 'Envoie tous les e-mails du site en HTML, aux couleurs du thème.', 'monprojet' );
+}
+```
+
+Une feature dont le comportement dépend de ses arguments peut adapter sa description (cf.
+`DisableUpdates` et `allow_minor_core`).
 
 ---
 
@@ -87,11 +114,11 @@ Seuls ces éléments sont couverts par le versionnement sémantique :
 
 - `Kernel::boot()`, `Kernel::get_instance()`, `Kernel::context()`
 - `ThemeContext` — constructeur, propriétés publiques, `handle()`
-- `Contracts\FeatureInterface`, `Contracts\ServiceProviderInterface`
+- `Contracts\FeatureInterface` (`register()`, `description()`), `Contracts\ServiceProviderInterface`
 - Les **signatures de constructeur** des classes `Features\*`
 - `Support\ViteManifest`, `Support\ViteDevServer`
 
-Tout le reste est interne et peut changer en patch.
+Tout le reste est interne et peut changer en patch — en particulier tout ce qui vit sous `Internal\`.
 
 **Une valeur par défaut fait partie de l'API.** Modifier le défaut de `schemes_to_remove` changerait
 visuellement tout le parc au prochain `composer update` sans toucher une signature : un changement de
@@ -121,6 +148,21 @@ Ce qui se propage et ce qui ne se propage pas :
 Le mode de défaillance à connaître : **une classe supprimée ou renommée provoque un écran blanc sur
 tout le site, wp-admin compris**, puisque le point d'échec est le bootstrap. Jamais de suppression en
 MINOR — `@deprecated` et `class_alias()` pendant un majeur complet.
+
+### Migrer de 1.x vers 2.0
+
+La 2.0 ajoute `description()` à `FeatureInterface`. Une feature du projet qui ne l'implémente pas
+provoque une **erreur fatale au démarrage**. Un projet en `^1.x` ne reçoit pas la 2.0 par
+`composer update` : la migration est un geste volontaire.
+
+1. Ajouter `description()` à chaque classe du projet qui implémente `FeatureInterface`
+   (`grep -rl 'implements FeatureInterface' src/`), avec le text-domain du projet.
+2. Passer la contrainte à `"deefuse/wp-theme-core": "^2.0"` dans `composer.json`, puis
+   `composer update deefuse/wp-theme-core`.
+3. Régénérer le `.pot` du projet (nouvelles chaînes).
+4. Ouvrir *Outils › Fonctionnalités du thème* : chaque feature du projet y apparaît avec sa description.
+
+Aucun provider à modifier.
 
 ---
 
@@ -217,4 +259,6 @@ Les modifier impose un `npm run build`, même en `npm run dev`.
 - [ ] Favicon visible en onglet, variantes claire/sombre correctes (émulation
       `prefers-color-scheme` des DevTools), fallback `.ico` visible dans un navigateur qui ignore
       le SVG favicon, `site.webmanifest` sans erreur de parsing (DevTools → Application → Manifest)
+- [ ] *Outils › Fonctionnalités du thème* (admin) : un tableau par provider, chaque feature
+      enregistrée présente une fois avec sa description ; page absente pour un Éditeur
 - [ ] Aucun notice avec `WP_DEBUG` activé

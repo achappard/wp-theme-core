@@ -42,6 +42,11 @@ final class MetaDescription implements FeatureInterface {
         add_action( 'wp_head', [ $this, 'render' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Ajoute aux pages la meta description lue par les moteurs de recherche, ou à défaut l\'extrait du contenu.', 'wp-theme-core' );
+    }
+
     /** Affiche la balise, uniquement sur un contenu singulier. */
     public function render(): void {
         if ( ! is_singular() ) {

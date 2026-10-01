@@ -24,6 +24,11 @@ class DisableBlockStyles implements FeatureInterface {
         remove_action( 'wp_footer',          'wp_enqueue_global_styles', 1 );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Retire du site public les feuilles de styles de l\'éditeur de blocs, inutiles au thème.', 'wp-theme-core' );
+    }
+
     /**
      * Retire les styles inutiles en front-end.
      *

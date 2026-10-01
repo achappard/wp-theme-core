@@ -21,6 +21,12 @@ class DisableDashicons implements FeatureInterface
         add_action( 'wp_enqueue_scripts', [ $this, 'dequeue' ], 100 );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string
+    {
+        return __( 'Ne charge plus la police d\'icônes Dashicons pour les visiteurs non connectés.', 'wp-theme-core' );
+    }
+
     /** Retire Dashicons de la queue uniquement pour les visiteurs non connectés. */
     public function dequeue(): void {
         if ( ! is_user_logged_in() ) {

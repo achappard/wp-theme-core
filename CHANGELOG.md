@@ -12,6 +12,25 @@ le diff six mois plus tard :
 
 ---
 
+## [2.0.0] — 2026-10-01
+
+### Modifié (cassant)
+
+- `Contracts\FeatureInterface::description(): string` — nouvelle méthode obligatoire : une courte
+  description de la feature destinée à un administrateur, traduite. Toutes les features du socle
+  l'implémentent ; celles des projets doivent l'ajouter (cf. README, *Migrer de 1.x vers 2.0*)
+
+### Ajouté
+
+- Page *Outils › Fonctionnalités du thème* (`tools.php?page={asset_prefix}-features`), réservée aux
+  administrateurs : les features enregistrées, groupées par provider, avec leur description. Montée
+  par le `Kernel` — ce n'est pas une feature, aucun provider ne peut la retirer. Code dans
+  `Internal\ListingFeaturesPage`, hors surface publique
+- Traductions anglaises des descriptions et de la page
+
+**Impact projet :** nécessite une modification du code — ajouter `description()` à chaque feature du
+projet et passer la contrainte Composer à `^2.0`. Aucun provider à modifier.
+
 ## [1.14.0] — 2026-09-30
 
 ### Ajouté

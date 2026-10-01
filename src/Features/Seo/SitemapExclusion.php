@@ -39,6 +39,11 @@ final class SitemapExclusion implements FeatureInterface {
         add_filter( 'wp_sitemaps_posts_query_args', [ $this, 'filter_query_args' ], 10, 2 );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Retire du sitemap XML les contenus marqués comme exclus.', 'wp-theme-core' );
+    }
+
     /**
      * Ajoute la condition d'exclusion à la requête du sitemap.
      *

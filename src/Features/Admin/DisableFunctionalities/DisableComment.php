@@ -43,6 +43,11 @@ final class DisableComment implements FeatureInterface {
         add_action( 'wp_dashboard_setup', [ $this, 'remove_dashboard_comments' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Désactive entièrement les commentaires : site public, administration, tableau de bord et API.', 'wp-theme-core' );
+    }
+
     /** Redirige les pages de commentaires et retire les métaboxes associées. */
     public function disable_comments_admin(): void {
         global $pagenow;

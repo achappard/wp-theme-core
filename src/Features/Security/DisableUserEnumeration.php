@@ -60,6 +60,11 @@ final class DisableUserEnumeration implements FeatureInterface {
         add_filter( 'get_the_author_user_url', [ $this, 'remove_feed_author_url' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Empêche les visiteurs de découvrir les identifiants des comptes (API, archives d\'auteur, flux RSS, sitemap).', 'wp-theme-core' );
+    }
+
     /**
      * Retire les routes REST des utilisateurs pour les visiteurs non authentifiés.
      *

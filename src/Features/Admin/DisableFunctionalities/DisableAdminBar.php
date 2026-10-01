@@ -23,6 +23,11 @@ final class DisableAdminBar implements FeatureInterface {
         add_action( 'admin_print_styles-profile.php', [ $this, 'hide_admin_bar_profile_option' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Masque la barre d\'administration sur le site public et retire le logo WordPress de l\'administration.', 'wp-theme-core' );
+    }
+
     /** Désactive la barre d'administration pour tous les visiteurs côté front. */
     public function disable_admin_bar(): void {
         show_admin_bar( false );

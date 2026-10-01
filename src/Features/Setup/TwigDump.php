@@ -36,6 +36,11 @@ final class TwigDump implements FeatureInterface {
         add_filter( 'timber/twig', [ $this, 'add_dump_function' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Outil de développement : affiche lisiblement les variables dans les templates, sans effet en production.', 'wp-theme-core' );
+    }
+
     /**
      * Ajoute `dump()` à l'environnement Twig, si Symfony VarDumper est disponible.
      *

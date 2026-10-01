@@ -30,6 +30,11 @@ final class AdminFooter implements FeatureInterface {
         add_filter( 'admin_footer_text', [ $this, 'replace_footer_text' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Remplace le texte du pied de page de l\'administration par les crédits de l\'agence.', 'wp-theme-core' );
+    }
+
     /**
      * Retourne le texte de crédit affiché en bas de chaque page de l'administration.
      *

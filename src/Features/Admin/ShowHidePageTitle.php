@@ -100,6 +100,11 @@ final class ShowHidePageTitle implements FeatureInterface {
         add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Ajoute à l\'éditeur de blocs un interrupteur « Afficher le titre », commun à toutes les pages.', 'wp-theme-core' );
+    }
+
     /** Déclare la route d'écriture du réglage. */
     public function register_route(): void {
         register_rest_route(

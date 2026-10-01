@@ -53,6 +53,11 @@ final class LoginBranding implements FeatureInterface {
         add_filter( 'login_headertext', [ $this, 'set_logo_text' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Applique le logo et les couleurs du thème à la page de connexion.', 'wp-theme-core' );
+    }
+
     /** Point d'entrée : sélectionne le mode dev ou production. */
     public function enqueue(): void {
         if ( $this->dev_server->is_active() ) {

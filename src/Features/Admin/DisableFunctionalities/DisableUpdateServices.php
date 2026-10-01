@@ -39,4 +39,9 @@ final class DisableUpdateServices implements FeatureInterface {
         add_filter( 'enable_update_services_configuration', '__return_false' );
         remove_action( 'do_all_pings', 'generic_ping' );
     }
+
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Désactive les services de mise à jour : plus aucun ping n\'est envoyé aux annuaires de blogs à la publication d\'un article.', 'wp-theme-core' );
+    }
 }

@@ -52,6 +52,11 @@ final class DisableNativeBlockSupports implements FeatureInterface {
         add_filter( 'register_block_type_args', [ $this, 'remove_supports' ], 10, 2 );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Retire les réglages de couleur et de typographie des blocs de l\'éditeur : la mise en forme reste celle du thème.', 'wp-theme-core' );
+    }
+
     /**
      * Supprime les supports color et typography sur les blocs ciblés.
      *

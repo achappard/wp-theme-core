@@ -90,6 +90,11 @@ final class ConvertUploadsToWebp implements FeatureInterface {
         add_filter( 'image_editor_output_format', [ $this, 'output_format' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Convertit au format WebP les images JPEG et PNG ajoutées à la médiathèque, miniatures comprises, pour alléger les pages.', 'wp-theme-core' );
+    }
+
     /**
      * Force le WebP pour toute taille générée plus tard à partir d'un JPEG ou d'un PNG
      * resté dans la médiathèque (import antérieur, conversion qui aurait échoué).

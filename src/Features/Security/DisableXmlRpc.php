@@ -39,6 +39,11 @@ final class DisableXmlRpc implements FeatureInterface {
         add_filter( 'wp_headers', [ $this, 'remove_pingback_header' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Ferme l\'API XML-RPC (xmlrpc.php), ancienne porte d\'entrée souvent visée par les attaques.', 'wp-theme-core' );
+    }
+
     /**
      * Ferme l'endpoint `xmlrpc.php` avant tout traitement.
      *

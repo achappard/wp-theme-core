@@ -56,6 +56,11 @@ final class SvgSupport implements FeatureInterface {
         add_action( 'admin_head', [ $this, 'print_preview_styles' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Autorise l\'ajout d\'images SVG dans la médiathèque, après les avoir nettoyées de tout code exécutable.', 'wp-theme-core' );
+    }
+
     /**
      * Ajoute le type MIME SVG aux extensions autorisées, pour les seuls utilisateurs
      * disposant de la capacité requise.

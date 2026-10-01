@@ -22,6 +22,12 @@ class DisableHeartbeat implements FeatureInterface
         add_action( 'init', [ $this, 'disableHeartbeat' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string
+    {
+        return __( 'Désactive les requêtes périodiques Heartbeat sur le site public.', 'wp-theme-core' );
+    }
+
     /** Désenregistre le script heartbeat hors admin (poll AJAX inutile sur le front). */
     public function disableHeartbeat(): void {
         if ( ! is_admin() ) {

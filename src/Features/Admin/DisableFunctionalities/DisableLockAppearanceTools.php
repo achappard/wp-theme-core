@@ -41,6 +41,11 @@ final class DisableLockAppearanceTools implements FeatureInterface {
         add_action( 'admin_head-themes.php', [ $this, 'hide_active_theme_customize' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Bloque l\'accès au Personnaliseur, à l\'Éditeur de site et aux Polices pour le thème actif, sans empêcher l\'aperçu des autres thèmes.', 'wp-theme-core' );
+    }
+
     /** Supprime les entrées Personnaliser, Éditeur et Polices du sous-menu Apparence. */
     public function remove_menus(): void {
         global $submenu;

@@ -49,6 +49,15 @@ final class DisableUpdates implements FeatureInterface {
         add_filter( 'site_status_tests', [ $this, 'remove_update_health_tests' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        if ( $this->allow_minor_core ) {
+            return __( 'Désactive les mises à jour automatiques des extensions, des thèmes, des traductions et des versions majeures de WordPress. Les mises à jour de sécurité restent automatiques.', 'wp-theme-core' );
+        }
+
+        return __( 'Désactive toutes les mises à jour automatiques : WordPress, extensions, thèmes et traductions.', 'wp-theme-core' );
+    }
+
     /**
      * Supprime les tests Site Health relatifs aux mises à jour pour éviter les faux avertissements.
      *

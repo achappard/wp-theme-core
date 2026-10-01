@@ -58,6 +58,11 @@ final class ThemeSupport implements FeatureInterface {
         add_action( 'after_setup_theme', [ $this, 'add_theme_supports' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Active les fonctionnalités WordPress utilisées par le thème (titre des pages, images à la une, HTML5…).', 'wp-theme-core' );
+    }
+
     /**
      * Déclare les supports auprès de WordPress.
      *

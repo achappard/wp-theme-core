@@ -32,6 +32,11 @@ final class DisableConnectors implements FeatureInterface {
         add_action( 'admin_init', [ $this, 'block_direct_access' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Retire la page Réglages › Connectors (connexion à des fournisseurs d\'IA), inutilisée.', 'wp-theme-core' );
+    }
+
     /** Retire l'entrée « Connectors » du sous-menu Réglages. */
     public function remove_menu(): void {
         remove_submenu_page( 'options-general.php', 'options-connectors.php' );

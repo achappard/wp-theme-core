@@ -52,6 +52,11 @@ final class SecurityHeaders implements FeatureInterface {
         add_action( 'send_headers', [ $this, 'send' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Ajoute aux pages publiques des en-têtes HTTP de sécurité, qui empêchent notamment d\'afficher le site dans une iframe d\'un autre domaine.', 'wp-theme-core' );
+    }
+
     /**
      * Émet les en-têtes de sécurité, si l'envoi n'a pas déjà commencé.
      *

@@ -18,4 +18,9 @@ final class DisableLoginLanguageDropdown implements FeatureInterface {
     public function register(): void {
         add_filter( 'login_display_language_dropdown', '__return_false' );
     }
+
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Retire le sélecteur de langue de la page de connexion.', 'wp-theme-core' );
+    }
 }

@@ -22,6 +22,12 @@ class DisableEmojis implements FeatureInterface
         add_action( 'init', [ $this, 'disableEmojis' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string
+    {
+        return __( 'Désactive les scripts et styles d\'emojis ajoutés par WordPress.', 'wp-theme-core' );
+    }
+
     /** Supprime tous les scripts, styles et filtres liés aux emojis. */
     public function disableEmojis(): void {
         remove_action( 'wp_head',             'print_emoji_detection_script', 7 );

@@ -66,6 +66,11 @@ final class Menus implements FeatureInterface {
         add_filter( 'timber/context', [ $this, 'add_menus_to_context' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Déclare les emplacements de menus du thème (Apparence › Menus).', 'wp-theme-core' );
+    }
+
     /** Déclare les emplacements de menus auprès de WordPress. */
     public function register_locations(): void {
         $locations = $this->resolve_locations();

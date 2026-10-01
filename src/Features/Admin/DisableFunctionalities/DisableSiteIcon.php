@@ -19,6 +19,11 @@ final class DisableSiteIcon implements FeatureInterface {
         add_action( 'admin_head', [ $this, 'hide_via_css' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Masque le réglage « Icône du site » de Réglages › Général.', 'wp-theme-core' );
+    }
+
     /** Masque la ligne « Icône du site », uniquement sur la page Réglages > Général. */
     public function hide_via_css(): void {
         $screen = get_current_screen();

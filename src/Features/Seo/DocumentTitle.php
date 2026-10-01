@@ -47,6 +47,11 @@ final class DocumentTitle implements FeatureInterface {
         add_filter( 'document_title_parts', [ $this, 'filter_parts' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Compose le titre des pages, affiché dans l\'onglet du navigateur et dans les résultats des moteurs de recherche.', 'wp-theme-core' );
+    }
+
     /**
      * Impose le séparateur du thème à la place du `-` du core.
      *

@@ -47,6 +47,11 @@ final class DisableBlocks implements FeatureInterface {
         add_filter( 'allowed_block_types_all', [ $this, 'allowed_blocks' ], 10, 2 );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Limite les blocs proposés dans l\'éditeur à une liste de blocs autorisés.', 'wp-theme-core' );
+    }
+
     /**
      * Retourne les blocs de la liste blanche + tous les blocs custom du thème.
      *

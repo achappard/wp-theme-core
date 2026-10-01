@@ -44,6 +44,11 @@ final class Assets implements FeatureInterface {
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Charge les feuilles de styles et les scripts du thème sur le site public.', 'wp-theme-core' );
+    }
+
     /** Point d'entrée : sélectionne le mode dev ou production. */
     public function enqueue(): void {
         if ( $this->dev_server->is_active() ) {

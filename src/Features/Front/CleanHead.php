@@ -44,4 +44,10 @@ final class CleanHead implements FeatureInterface {
         remove_action( 'wp_head', 'feed_links',       2 );
         remove_action( 'wp_head', 'feed_links_extra', 3 );
     }
+
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string
+    {
+        return __( 'Retire du code des pages les balises inutiles ou qui révèlent la version de WordPress.', 'wp-theme-core' );
+    }
 }

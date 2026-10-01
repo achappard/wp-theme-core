@@ -64,6 +64,11 @@ final class Favicons implements FeatureInterface {
 		add_filter( 'timber/context', [ $this, 'add_favicons_to_context' ] );
 	}
 
+	/** Courte description affichée sur la page « Fonctionnalités du thème ». */
+	public function description(): string {
+		return __( 'Fournit au thème les favicons (versions claire et sombre) et la couleur de l\'onglet du navigateur.', 'wp-theme-core' );
+	}
+
 	/**
 	 * Injecte le tableau `favicons` dans le contexte global.
 	 *

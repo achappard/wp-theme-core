@@ -43,6 +43,11 @@ final class HideLoginErrors implements FeatureInterface {
         add_action( 'lostpassword_post', [ $this, 'neutralize_lostpassword' ], 10, 2 );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Affiche le même message à la connexion et au mot de passe oublié, pour ne pas révéler quels comptes existent.', 'wp-theme-core' );
+    }
+
     /**
      * Remplace le message d'échec de l'écran de connexion par une formule unique.
      *

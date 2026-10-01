@@ -32,4 +32,9 @@ final class DisableGutenberg implements FeatureInterface {
         add_filter( 'use_block_editor_for_post_type', '__return_false', 100 );
         add_filter( 'use_widgets_block_editor', '__return_false', 100 );
     }
+
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Remplace l\'éditeur de blocs par l\'éditeur classique, pour tous les contenus et pour les widgets.', 'wp-theme-core' );
+    }
 }

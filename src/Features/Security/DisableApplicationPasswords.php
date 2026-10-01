@@ -33,4 +33,9 @@ final class DisableApplicationPasswords implements FeatureInterface {
     public function register(): void {
         add_filter( 'wp_is_application_passwords_available', '__return_false' );
     }
+
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Désactive les mots de passe d\'application, qui permettent à un logiciel externe de se connecter au site.', 'wp-theme-core' );
+    }
 }

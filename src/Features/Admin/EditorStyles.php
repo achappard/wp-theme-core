@@ -65,6 +65,11 @@ final class EditorStyles implements FeatureInterface {
         add_action( 'after_setup_theme', [ $this, 'add_editor_styles' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Affiche le contenu dans l\'éditeur de blocs avec les styles du thème.', 'wp-theme-core' );
+    }
+
     /**
      * Déclare la feuille au core.
      *

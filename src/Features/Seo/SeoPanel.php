@@ -64,6 +64,11 @@ final class SeoPanel implements FeatureInterface {
         add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Ajoute à l\'éditeur de blocs un panneau SEO : meta description et exclusion du sitemap.', 'wp-theme-core' );
+    }
+
     /** Déclare les deux metas auprès des types de contenu concernés. */
     public function register_meta(): void {
         foreach ( $this->post_types as $post_type ) {

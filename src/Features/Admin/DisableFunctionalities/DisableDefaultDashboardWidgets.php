@@ -19,6 +19,11 @@ final class DisableDefaultDashboardWidgets implements FeatureInterface {
         add_action( 'wp_dashboard_setup', [ $this, 'remove_dashboard_widgets' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Retire du tableau de bord le panneau de bienvenue et les modules par défaut (Activité, Brouillon rapide, actualités WordPress).', 'wp-theme-core' );
+    }
+
     /**
      * Retire le panneau de bienvenue et les modules par défaut du tableau de bord.
      *

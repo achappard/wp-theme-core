@@ -34,4 +34,9 @@ final class DisablePostByEmail implements FeatureInterface {
     public function register(): void {
         add_filter( 'enable_post_by_email_configuration', '__return_false' );
     }
+
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Désactive la publication d\'articles par e-mail et masque ses réglages dans Réglages › Écriture.', 'wp-theme-core' );
+    }
 }

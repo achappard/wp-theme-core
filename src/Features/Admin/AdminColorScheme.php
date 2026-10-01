@@ -92,6 +92,11 @@ final class AdminColorScheme implements FeatureInterface {
         }
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Applique la palette de couleurs du client à l\'administration et limite les jeux de couleurs proposés dans le profil.', 'wp-theme-core' );
+    }
+
     /**
      * Déclare le scheme au core.
      *

@@ -1,4 +1,3 @@
-# Socle de thème Deefuse. This file is distributed under the GNU General Public License v2 or later.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
@@ -9,91 +8,281 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-08-27T12:52:56+00:00\n"
-"PO-Revision-Date: 2026-08-27 14:55+0200\n"
+"PO-Revision-Date: 2026-10-01T11:52:50+00:00\n"
 "Language: en_US\n"
 "X-Generator: Poedit 3.9\n"
 "X-Domain: wp-theme-core\n"
 
+#: Features/Admin/AdminColorScheme.php:97
+msgid "Applique la palette de couleurs du client à l'administration et limite les jeux de couleurs proposés dans le profil."
+msgstr "Applies the client's colour palette to the admin and limits the colour schemes offered in the profile."
+
+#: Features/Admin/AdminFooter.php:35
+msgid "Remplace le texte du pied de page de l'administration par les crédits de l'agence."
+msgstr "Replaces the admin footer text with the agency credits."
+
+#. translators: %s: lien vers le site de l'agence
+#: Features/Admin/AdminFooter.php:57
+#, php-format
+msgid "Une création %s"
+msgstr "A creation %s"
+
 #. translators: 1: lien vers le site de l'agence, 2: description de l'agence
-#: Features/Admin/AdminFooter.php:59
+#: Features/Admin/AdminFooter.php:64
 #, php-format
 msgid "Une création %1$s — %2$s"
 msgstr "A creation %1$s — %2$s"
 
-#: Features/Admin/ShowHidePageTitle.php:208
+#: Features/Admin/ConvertUploadsToWebp.php:95
+msgid "Convertit au format WebP les images JPEG et PNG ajoutées à la médiathèque, miniatures comprises, pour alléger les pages."
+msgstr "Converts JPEG and PNG images added to the media library to WebP, thumbnails included, to make pages lighter."
+
+#: Features/Admin/DisableFunctionalities/DisableAdminBar.php:28
+msgid "Masque la barre d'administration sur le site public et retire le logo WordPress de l'administration."
+msgstr "Hides the admin bar on the public site and removes the WordPress logo from the admin."
+
+#: Features/Admin/DisableFunctionalities/DisableBlocks.php:52
+msgid "Limite les blocs proposés dans l'éditeur à une liste de blocs autorisés."
+msgstr "Limits the blocks offered in the editor to a list of allowed blocks."
+
+#: Features/Admin/DisableFunctionalities/DisableComment.php:48
+msgid "Désactive entièrement les commentaires : site public, administration, tableau de bord et API."
+msgstr "Fully disables comments: public site, admin, dashboard and API."
+
+#: Features/Admin/DisableFunctionalities/DisableConnectors.php:37
+msgid "Retire la page Réglages › Connectors (connexion à des fournisseurs d'IA), inutilisée."
+msgstr "Removes the Settings › Connectors page (connection to AI providers), which is unused."
+
+#: Features/Admin/DisableFunctionalities/DisableDefaultDashboardWidgets.php:24
+msgid "Retire du tableau de bord le panneau de bienvenue et les modules par défaut (Activité, Brouillon rapide, actualités WordPress)."
+msgstr "Removes the welcome panel and the default widgets (Activity, Quick Draft, WordPress news) from the dashboard."
+
+#: Features/Admin/DisableFunctionalities/DisableGutenberg.php:38
+msgid "Remplace l'éditeur de blocs par l'éditeur classique, pour tous les contenus et pour les widgets."
+msgstr "Replaces the block editor with the classic editor, for all content and for widgets."
+
+#: Features/Admin/DisableFunctionalities/DisableLockAppearanceTools.php:46
+msgid "Bloque l'accès au Personnaliseur, à l'Éditeur de site et aux Polices pour le thème actif, sans empêcher l'aperçu des autres thèmes."
+msgstr "Blocks access to the Customizer, Site Editor and Fonts for the active theme, while still allowing other themes to be previewed."
+
+#: Features/Admin/DisableFunctionalities/DisableLoginLanguageDropdown.php:24
+msgid "Retire le sélecteur de langue de la page de connexion."
+msgstr "Removes the language switcher from the login page."
+
+#: Features/Admin/DisableFunctionalities/DisableNativeBlockSupports.php:57
+msgid "Retire les réglages de couleur et de typographie des blocs de l'éditeur : la mise en forme reste celle du thème."
+msgstr "Removes the colour and typography settings from editor blocks: styling stays in the hands of the theme."
+
+#: Features/Admin/DisableFunctionalities/DisablePostByEmail.php:40
+msgid "Désactive la publication d'articles par e-mail et masque ses réglages dans Réglages › Écriture."
+msgstr "Disables posting by email and hides its settings in Settings › Writing."
+
+#: Features/Admin/DisableFunctionalities/DisableSiteIcon.php:24
+msgid "Masque le réglage « Icône du site » de Réglages › Général."
+msgstr "Hides the “Site Icon” setting in Settings › General."
+
+#: Features/Admin/DisableFunctionalities/DisableUpdates.php:55
+msgid "Désactive les mises à jour automatiques des extensions, des thèmes, des traductions et des versions majeures de WordPress. Les mises à jour de sécurité restent automatiques."
+msgstr "Disables automatic updates for plugins, themes, translations and major WordPress versions. Security updates remain automatic."
+
+#: Features/Admin/DisableFunctionalities/DisableUpdates.php:58
+msgid "Désactive toutes les mises à jour automatiques : WordPress, extensions, thèmes et traductions."
+msgstr "Disables all automatic updates: WordPress, plugins, themes and translations."
+
+#: Features/Admin/DisableFunctionalities/DisableUpdateServices.php:45
+msgid "Désactive les services de mise à jour : plus aucun ping n'est envoyé aux annuaires de blogs à la publication d'un article."
+msgstr "Disables update services: no more pings are sent to blog directories when a post is published."
+
+#: Features/Admin/EditorStyles.php:70
+msgid "Affiche le contenu dans l'éditeur de blocs avec les styles du thème."
+msgstr "Displays content in the block editor with the theme's styles."
+
+#: Features/Admin/LoginBranding.php:58
+msgid "Applique le logo et les couleurs du thème à la page de connexion."
+msgstr "Applies the theme's logo and colours to the login page."
+
+#: Features/Admin/ShowHidePageTitle.php:105
+msgid "Ajoute à l'éditeur de blocs un interrupteur « Afficher le titre », commun à toutes les pages."
+msgstr "Adds a “Show title” toggle to the block editor, shared by all pages."
+
+#: Features/Admin/ShowHidePageTitle.php:213
 msgid "Titre"
 msgstr "Title"
 
-#: Features/Admin/ShowHidePageTitle.php:209
+#: Features/Admin/ShowHidePageTitle.php:214
 msgid "Afficher le titre"
 msgstr "Show the title"
 
-#: Features/Admin/ShowHidePageTitle.php:210
+#: Features/Admin/ShowHidePageTitle.php:215
 msgid "Réglage global : le titre est affiché dans l’éditeur, sur tous les contenus concernés."
 msgstr "Site-wide setting: the title is shown in the editor, on every content type concerned."
 
-#: Features/Admin/ShowHidePageTitle.php:211
+#: Features/Admin/ShowHidePageTitle.php:216
 msgid "Réglage global : le titre est masqué dans l’éditeur, sur tous les contenus concernés ; il reste modifiable en haut de cette barre latérale."
 msgstr "Site-wide setting: the title is hidden in the editor, on every content type concerned; it remains editable at the top of this sidebar."
 
-#: Features/Admin/ShowHidePageTitle.php:212
+#: Features/Admin/ShowHidePageTitle.php:217
 msgid "Le réglage n’a pas pu être enregistré."
 msgstr "The setting could not be saved."
 
-#: Features/Admin/SvgSupport.php:155
+#: Features/Admin/SvgSupport.php:61
+msgid "Autorise l'ajout d'images SVG dans la médiathèque, après les avoir nettoyées de tout code exécutable."
+msgstr "Allows SVG images to be added to the media library, once cleaned of any executable code."
+
+#: Features/Admin/SvgSupport.php:142
 msgid "Vous n’êtes pas autorisé à envoyer des fichiers SVG."
 msgstr "You are not allowed to upload SVG files."
 
-#: Features/Admin/SvgSupport.php:164
+#: Features/Admin/SvgSupport.php:151
 msgid "Le fichier SVG n’a pas pu être lu."
 msgstr "The SVG file could not be read."
 
-#: Features/Admin/SvgSupport.php:172
+#: Features/Admin/SvgSupport.php:159
 msgid "Ce fichier SVG a été refusé : il est invalide ou contient du code non autorisé."
 msgstr "This SVG file was rejected: it is invalid or contains unauthorized code."
 
-#: Features/Admin/SvgSupport.php:178
+#: Features/Admin/SvgSupport.php:165
 msgid "Le fichier SVG n’a pas pu être nettoyé avant son enregistrement."
 msgstr "The SVG file could not be cleaned up before it was saved."
 
-#: Features/Security/HideLoginErrors.php:61
+#: Features/Front/Assets.php:49
+msgid "Charge les feuilles de styles et les scripts du thème sur le site public."
+msgstr "Loads the theme's stylesheets and scripts on the public site."
+
+#: Features/Front/CleanHead.php:51
+msgid "Retire du code des pages les balises inutiles ou qui révèlent la version de WordPress."
+msgstr "Removes from page markup the tags that are useless or that reveal the WordPress version."
+
+#: Features/Front/DisableFunctionalities/DisableBlockStyles.php:29
+msgid "Retire du site public les feuilles de styles de l'éditeur de blocs, inutiles au thème."
+msgstr "Removes the block editor stylesheets, which the theme does not need, from the public site."
+
+#: Features/Front/DisableFunctionalities/DisableDashicons.php:27
+msgid "Ne charge plus la police d'icônes Dashicons pour les visiteurs non connectés."
+msgstr "No longer loads the Dashicons icon font for logged-out visitors."
+
+#: Features/Front/DisableFunctionalities/DisableEmojis.php:28
+msgid "Désactive les scripts et styles d'emojis ajoutés par WordPress."
+msgstr "Disables the emoji scripts and styles added by WordPress."
+
+#: Features/Front/DisableFunctionalities/DisableHeartbeat.php:28
+msgid "Désactive les requêtes périodiques Heartbeat sur le site public."
+msgstr "Disables periodic Heartbeat requests on the public site."
+
+#: Features/Front/Favicons.php:69
+msgid "Fournit au thème les favicons (versions claire et sombre) et la couleur de l'onglet du navigateur."
+msgstr "Provides the theme with its favicons (light and dark versions) and the browser tab colour."
+
+#: Features/Security/DisableApplicationPasswords.php:39
+msgid "Désactive les mots de passe d'application, qui permettent à un logiciel externe de se connecter au site."
+msgstr "Disables application passwords, which let external software connect to the site."
+
+#: Features/Security/DisableUserEnumeration.php:65
+msgid "Empêche les visiteurs de découvrir les identifiants des comptes (API, archives d'auteur, flux RSS, sitemap)."
+msgstr "Prevents visitors from discovering account usernames (API, author archives, RSS feeds, sitemap)."
+
+#: Features/Security/DisableXmlRpc.php:44
+msgid "Ferme l'API XML-RPC (xmlrpc.php), ancienne porte d'entrée souvent visée par les attaques."
+msgstr "Closes the XML-RPC API (xmlrpc.php), a legacy entry point frequently targeted by attacks."
+
+#: Features/Security/HideLoginErrors.php:48
+msgid "Affiche le même message à la connexion et au mot de passe oublié, pour ne pas révéler quels comptes existent."
+msgstr "Shows the same message on login and lost password, so as not to reveal which accounts exist."
+
+#: Features/Security/HideLoginErrors.php:66
 msgid "Identifiant ou mot de passe incorrect."
 msgstr "Incorrect login or password."
 
-#: Features/Seo/SeoPanel.php:142
+#: Features/Security/SecurityHeaders.php:57
+msgid "Ajoute aux pages publiques des en-têtes HTTP de sécurité, qui empêchent notamment d'afficher le site dans une iframe d'un autre domaine."
+msgstr "Adds HTTP security headers to public pages, notably preventing the site from being displayed in an iframe on another domain."
+
+#: Features/Seo/DocumentTitle.php:52
+msgid "Compose le titre des pages, affiché dans l'onglet du navigateur et dans les résultats des moteurs de recherche."
+msgstr "Builds the page title shown in the browser tab and in search engine results."
+
+#: Features/Seo/MetaDescription.php:47
+msgid "Ajoute aux pages la meta description lue par les moteurs de recherche, ou à défaut l'extrait du contenu."
+msgstr "Adds to pages the meta description read by search engines, or the content excerpt if there is none."
+
+#: Features/Seo/OpenGraph.php:70
+msgid "Ajoute les balises Open Graph : titre, description et image affichés quand un lien vers le site est partagé."
+msgstr "Adds Open Graph tags: the title, description and image shown when a link to the site is shared."
+
+#: Features/Seo/SeoPanel.php:69
+msgid "Ajoute à l'éditeur de blocs un panneau SEO : meta description et exclusion du sitemap."
+msgstr "Adds an SEO panel to the block editor: meta description and sitemap exclusion."
+
+#: Features/Seo/SeoPanel.php:147
 msgid "SEO"
 msgstr "SEO"
 
-#: Features/Seo/SeoPanel.php:148
+#: Features/Seo/SeoPanel.php:153
 msgid "Meta description"
 msgstr "Meta description"
 
 #. translators: 1: nombre de caractères saisis, 2: limite recommandée
-#: Features/Seo/SeoPanel.php:150
+#: Features/Seo/SeoPanel.php:155
 #, php-format
 msgid "%1$d/%2$d caractères"
 msgstr "%1$d/%2$d characters"
 
 #. translators: 1: nombre de caractères saisis, 2: limite recommandée
-#: Features/Seo/SeoPanel.php:152
+#: Features/Seo/SeoPanel.php:157
 #, php-format
 msgid "%1$d caractères — au-delà des %2$d recommandés par Google"
 msgstr "%1$d characters — beyond the %2$d recommended by Google"
 
-#: Features/Seo/SeoPanel.php:153
+#: Features/Seo/SeoPanel.php:158
 msgid "Sitemap"
 msgstr "Sitemap"
 
-#: Features/Seo/SeoPanel.php:154
+#: Features/Seo/SeoPanel.php:159
 msgid "Inclure cette page dans le sitemap"
 msgstr "Include this page in the sitemap"
 
-#: Features/Seo/SeoPanel.php:155
+#: Features/Seo/SeoPanel.php:160
 msgid "Désactiver retire ce contenu des sitemaps XML générés par WordPress."
 msgstr "Disabling removes this content from the XML sitemaps generated by WordPress."
 
-#. translators: %s: lien vers le site de l'agence
-#: Features/Admin/AdminFooter.php:52
-#, php-format
-msgid "Une création %s"
-msgstr "A creation %s"
+#: Features/Seo/SitemapExclusion.php:44
+msgid "Retire du sitemap XML les contenus marqués comme exclus."
+msgstr "Removes content marked as excluded from the XML sitemap."
+
+#: Features/Setup/Menus.php:71
+msgid "Déclare les emplacements de menus du thème (Apparence › Menus)."
+msgstr "Registers the theme's menu locations (Appearance › Menus)."
+
+#: Features/Setup/ThemeSupport.php:63
+msgid "Active les fonctionnalités WordPress utilisées par le thème (titre des pages, images à la une, HTML5…)."
+msgstr "Enables the WordPress features used by the theme (page titles, featured images, HTML5…)."
+
+#: Features/Setup/TwigDump.php:41
+msgid "Outil de développement : affiche lisiblement les variables dans les templates, sans effet en production."
+msgstr "Development tool: displays template variables in a readable way, no effect in production."
+
+#: Internal/ListingFeaturesPage.php:48
+#: Internal/ListingFeaturesPage.php:49
+#: Internal/ListingFeaturesPage.php:59
+msgid "Fonctionnalités du thème"
+msgstr "Theme features"
+
+#: Internal/ListingFeaturesPage.php:60
+msgid "Fonctionnalités activées par le thème, regroupées par provider, dans leur ordre de chargement."
+msgstr "Features enabled by the theme, grouped by provider, in loading order."
+
+#: Internal/ListingFeaturesPage.php:66
+msgid "Fonctionnalité"
+msgstr "Feature"
+
+#: Internal/ListingFeaturesPage.php:67
+msgid "Description"
+msgstr "Description"
+
+#: Internal/ListingFeaturesPage.php:71
+msgid "Aucune fonctionnalité."
+msgstr "No features."
+
+#: Internal/ListingFeaturesPage.php:97
+msgid "(projet)"
+msgstr "(project)"

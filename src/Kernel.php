@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace Deefuse\ThemeCore;
 
+use Deefuse\ThemeCore\Contracts\FeatureInterface;
 use Deefuse\ThemeCore\Contracts\ServiceProviderInterface;
+use Deefuse\ThemeCore\Internal\ListingFeaturesPage;
 use InvalidArgumentException;
 use Timber\Timber;
 
@@ -42,7 +44,7 @@ class Kernel {
     ) {
         $this->init_core_translations();
         $this->init_timber();
-        $this->load_features();
+        $this->init_listing_features_page( $this->load_features() );
     }
 
     /**
@@ -124,16 +126,33 @@ class Kernel {
     }
 
     /**
+     * Monte la page Outils › Fonctionnalités du thème
+     *
+     * Cette page décrit le socle lui-même, elle ne rend aucun service au site : ce
+     * n'est donc pas une feature, et aucun provider ne peut la retirer. Elle liste
+     * exactement ce que `load_features()` vient d'enregistrer.
+     *
+     * @param array<class-string<ServiceProviderInterface>, FeatureInterface[]> $features Features enregistrées, par provider.
+     */
+    private function init_listing_features_page( array $features ): void {
+        ( new ListingFeaturesPage( $this->context, $features ) )->register();
+    }
+
+    /**
      * Charge toutes les features du thème, provider par provider
      *
      * L'ordre reçu fait foi, à l'intérieur d'un provider comme entre providers.
      * Une feature s'ajoute dans le provider correspondant à son domaine, jamais ici.
      *
+     * @return array<class-string<ServiceProviderInterface>, FeatureInterface[]> Features enregistrées, par provider.
+     *
      * @throws InvalidArgumentException Si un provider n'honore pas le contrat — mieux
      *                                  vaut une erreur nette au démarrage qu'un appel
      *                                  statique sur une classe inattendue.
      */
-    private function load_features(): void {
+    private function load_features(): array {
+        $loaded = [];
+
         foreach ( $this->providers as $provider ) {
             if ( ! is_subclass_of( $provider, ServiceProviderInterface::class, true ) ) {
                 throw new InvalidArgumentException(
@@ -141,9 +160,13 @@ class Kernel {
                 );
             }
 
-            foreach ( $provider::features( $this->context ) as $feature ) {
+            $loaded[ $provider ] = $provider::features( $this->context );
+
+            foreach ( $loaded[ $provider ] as $feature ) {
                 $feature->register();
             }
         }
+
+        return $loaded;
     }
 }

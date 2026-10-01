@@ -65,6 +65,11 @@ final class OpenGraph implements FeatureInterface {
         add_action( 'wp_head', [ $this, 'render' ] );
     }
 
+    /** Courte description affichée sur la page « Fonctionnalités du thème ». */
+    public function description(): string {
+        return __( 'Ajoute les balises Open Graph : titre, description et image affichés quand un lien vers le site est partagé.', 'wp-theme-core' );
+    }
+
     /** Affiche les balises, uniquement sur un contenu singulier. */
     public function render(): void {
         if ( ! is_singular() ) {
