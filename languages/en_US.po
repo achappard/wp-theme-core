@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-08-27T12:52:56+00:00\n"
-"PO-Revision-Date: 2026-10-01T11:52:50+00:00\n"
+"PO-Revision-Date: 2026-10-01T12:14:49+00:00\n"
 "Language: en_US\n"
 "X-Generator: Poedit 3.9\n"
 "X-Domain: wp-theme-core\n"
@@ -261,28 +261,40 @@ msgstr "Enables the WordPress features used by the theme (page titles, featured 
 msgid "Outil de développement : affiche lisiblement les variables dans les templates, sans effet en production."
 msgstr "Development tool: displays template variables in a readable way, no effect in production."
 
-#: Internal/ListingFeaturesPage.php:48
-#: Internal/ListingFeaturesPage.php:49
-#: Internal/ListingFeaturesPage.php:59
+#: Internal/ListingFeaturesPage.php:57
+#: Internal/ListingFeaturesPage.php:58
+#: Internal/ListingFeaturesPage.php:75
 msgid "Fonctionnalités du thème"
 msgstr "Theme features"
 
-#: Internal/ListingFeaturesPage.php:60
+#: Internal/ListingFeaturesPage.php:76
 msgid "Fonctionnalités activées par le thème, regroupées par provider, dans leur ordre de chargement."
 msgstr "Features enabled by the theme, grouped by provider, in loading order."
 
-#: Internal/ListingFeaturesPage.php:66
+#: Internal/ListingFeaturesPage.php:94
 msgid "Fonctionnalité"
 msgstr "Feature"
 
-#: Internal/ListingFeaturesPage.php:67
+#: Internal/ListingFeaturesPage.php:95
 msgid "Description"
 msgstr "Description"
 
-#: Internal/ListingFeaturesPage.php:71
-msgid "Aucune fonctionnalité."
-msgstr "No features."
+#: Internal/ListingFeaturesPage.php:106
+msgid "Aucune fonctionnalité dans cette catégorie."
+msgstr "No features in this category."
 
-#: Internal/ListingFeaturesPage.php:97
-msgid "(projet)"
-msgstr "(project)"
+#. translators: %s : nombre de fonctionnalités propres au projet.
+#: Internal/ListingFeaturesPage.php:129
+#, php-format
+msgid "Projet <span class=\"count\">(%s)</span>"
+msgid_plural "Projet <span class=\"count\">(%s)</span>"
+msgstr[0] "Project <span class=\"count\">(%s)</span>"
+msgstr[1] "Project <span class=\"count\">(%s)</span>"
+
+#. translators: %s : nombre de fonctionnalités génériques, fournies par le socle.
+#: Internal/ListingFeaturesPage.php:131
+#, php-format
+msgid "Générique <span class=\"count\">(%s)</span>"
+msgid_plural "Générique <span class=\"count\">(%s)</span>"
+msgstr[0] "Generic <span class=\"count\">(%s)</span>"
+msgstr[1] "Generic <span class=\"count\">(%s)</span>"

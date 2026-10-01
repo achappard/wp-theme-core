@@ -12,6 +12,17 @@ le diff six mois plus tard :
 
 ---
 
+## [2.1.0] — 2026-10-01
+
+### Ajouté
+
+- Page *Outils › Fonctionnalités du thème* : deux vues, **Projet** (par défaut) et **Générique**
+  (features du socle), au rendu des vues de la liste des articles (« Tous (1) | Publié (1) »), avec
+  leurs compteurs. Paramètre d'URL `scope=project|generic` ; un provider sans feature dans la vue
+  active n'est pas affiché. La mention « (projet) » de chaque ligne disparaît, la vue le dit déjà
+
+**Impact projet :** aucun — `composer update deefuse/wp-theme-core`.
+
 ## [2.0.0] — 2026-10-01
 
 ### Modifié (cassant)

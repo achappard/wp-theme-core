@@ -87,7 +87,11 @@ public static function features( ThemeContext $context ): array {
 Le `Kernel` monte sous **Outils** une page réservée aux administrateurs (`manage_options`), à l'adresse
 `tools.php?page={asset_prefix}-features`. Elle liste les features **réellement enregistrées**, un
 tableau par provider dans l'ordre de `functions.php` : nom court de la classe (le nom complet au
-survol), mention « (projet) » pour une classe hors du socle, et sa description.
+survol) et sa description.
+
+Deux vues, au rendu des « Tous (1) | Publié (1) » de la liste des articles : **Projet** (classes hors
+du socle, vue par défaut) et **Générique** (classes `Deefuse\ThemeCore\`), choisies par le paramètre
+d'URL `scope=project|generic`. Un provider sans feature dans la vue active n'est pas affiché.
 
 Ce n'est pas une feature : elle décrit le socle sans rendre de service au site, et aucun provider ne
 peut la retirer. Son code vit dans `Internal\ListingFeaturesPage`.
@@ -259,6 +263,6 @@ Les modifier impose un `npm run build`, même en `npm run dev`.
 - [ ] Favicon visible en onglet, variantes claire/sombre correctes (émulation
       `prefers-color-scheme` des DevTools), fallback `.ico` visible dans un navigateur qui ignore
       le SVG favicon, `site.webmanifest` sans erreur de parsing (DevTools → Application → Manifest)
-- [ ] *Outils › Fonctionnalités du thème* (admin) : un tableau par provider, chaque feature
-      enregistrée présente une fois avec sa description ; page absente pour un Éditeur
+- [ ] *Outils › Fonctionnalités du thème* (admin) : vue Projet par défaut, vue Générique au clic ;
+      chaque feature enregistrée présente une fois avec sa description ; page absente pour un Éditeur
 - [ ] Aucun notice avec `WP_DEBUG` activé

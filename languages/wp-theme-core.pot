@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T11:52:50+00:00\n"
+"POT-Creation-Date: 2026-10-01T12:14:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-theme-core\n"
@@ -261,28 +261,40 @@ msgstr ""
 msgid "Outil de développement : affiche lisiblement les variables dans les templates, sans effet en production."
 msgstr ""
 
-#: Internal/ListingFeaturesPage.php:48
-#: Internal/ListingFeaturesPage.php:49
-#: Internal/ListingFeaturesPage.php:59
+#: Internal/ListingFeaturesPage.php:57
+#: Internal/ListingFeaturesPage.php:58
+#: Internal/ListingFeaturesPage.php:75
 msgid "Fonctionnalités du thème"
 msgstr ""
 
-#: Internal/ListingFeaturesPage.php:60
+#: Internal/ListingFeaturesPage.php:76
 msgid "Fonctionnalités activées par le thème, regroupées par provider, dans leur ordre de chargement."
 msgstr ""
 
-#: Internal/ListingFeaturesPage.php:66
+#: Internal/ListingFeaturesPage.php:94
 msgid "Fonctionnalité"
 msgstr ""
 
-#: Internal/ListingFeaturesPage.php:67
+#: Internal/ListingFeaturesPage.php:95
 msgid "Description"
 msgstr ""
 
-#: Internal/ListingFeaturesPage.php:71
-msgid "Aucune fonctionnalité."
+#: Internal/ListingFeaturesPage.php:106
+msgid "Aucune fonctionnalité dans cette catégorie."
 msgstr ""
 
-#: Internal/ListingFeaturesPage.php:97
-msgid "(projet)"
-msgstr ""
+#. translators: %s : nombre de fonctionnalités propres au projet.
+#: Internal/ListingFeaturesPage.php:129
+#, php-format
+msgid "Projet <span class=\"count\">(%s)</span>"
+msgid_plural "Projet <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s : nombre de fonctionnalités génériques, fournies par le socle.
+#: Internal/ListingFeaturesPage.php:131
+#, php-format
+msgid "Générique <span class=\"count\">(%s)</span>"
+msgid_plural "Générique <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
