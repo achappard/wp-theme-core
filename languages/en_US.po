@@ -10,6 +10,7 @@ msgstr ""
 "POT-Creation-Date: 2026-08-27T12:52:56+00:00\n"
 "PO-Revision-Date: 2026-10-01T12:14:49+00:00\n"
 "Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.9\n"
 "X-Domain: wp-theme-core\n"
 

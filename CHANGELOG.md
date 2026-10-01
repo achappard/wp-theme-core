@@ -12,6 +12,21 @@ le diff six mois plus tard :
 
 ---
 
+## [2.2.1] — 2026-10-01
+
+### Corrigé
+
+- `languages/en_US.po` : en-tête `Plural-Forms` ajouté (`nplurals=2; plural=(n != 1);`). Il manquait
+  depuis l'arrivée des chaînes au pluriel (compteurs de la page des fonctionnalités, 2.1.0) :
+  `msgfmt -c` refusait le catalogue. Sans effet visible en anglais, WordPress retombant sur la même
+  règle par défaut
+- Traductions anglaises livrées sous les quatre noms attendus par `Kernel::init_core_translations()` :
+  `en_US.l10n.php`, `wp-theme-core-en_US.mo` et `wp-theme-core-en_US.l10n.php` manquaient, seul
+  `en_US.mo` était livré. Un socle monté en `repository: path` avec `symlink` perdait donc ses
+  traductions anglaises
+
+**Impact projet :** aucun — `composer update deefuse/wp-theme-core`.
+
 ## [2.2.0] — 2026-10-01
 
 ### Ajouté
