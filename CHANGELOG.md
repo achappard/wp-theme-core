@@ -12,6 +12,17 @@ le diff six mois plus tard :
 
 ---
 
+## [2.2.0] — 2026-10-01
+
+### Ajouté
+
+- `Features\Admin\DisableFunctionalities\DisableLoginPrivacyPolicyLink` — retire le lien
+  « Politique de confidentialité » du pied de `wp-login.php` (filtre `the_privacy_policy_link`,
+  posé sur `login_init` : le lien reste disponible partout ailleurs). Réservé aux sites dont la page
+  de connexion ne sert qu'à l'équipe : à ne pas déclarer si l'inscription est ouverte (RGPD, art. 13)
+
+**Impact projet :** aucun — opt-in, `new DisableLoginPrivacyPolicyLink()` à ajouter à `AdminServiceProvider`.
+
 ## [2.1.0] — 2026-10-01
 
 ### Ajouté

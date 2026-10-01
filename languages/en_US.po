@@ -69,6 +69,10 @@ msgstr "Blocks access to the Customizer, Site Editor and Fonts for the active th
 msgid "Retire le sélecteur de langue de la page de connexion."
 msgstr "Removes the language switcher from the login page."
 
+#: Features/Admin/DisableFunctionalities/DisableLoginPrivacyPolicyLink.php:37
+msgid "Retire le lien « Politique de confidentialité » du pied de la page de connexion."
+msgstr "Removes the “Privacy Policy” link from the login page footer."
+
 #: Features/Admin/DisableFunctionalities/DisableNativeBlockSupports.php:57
 msgid "Retire les réglages de couleur et de typographie des blocs de l'éditeur : la mise en forme reste celle du thème."
 msgstr "Removes the colour and typography settings from editor blocks: styling stays in the hands of the theme."
