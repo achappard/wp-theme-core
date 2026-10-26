@@ -12,6 +12,17 @@ le diff six mois plus tard :
 
 ---
 
+## [2.2.2] — 2026-10-26
+
+### Modifié
+
+- Dépôt public : installation par l'URL HTTPS `https://github.com/achappard/wp-theme-core.git`,
+  sans clé SSH ni deploy key. L'ancienne URL SSH reste valable
+- Ajout du fichier `LICENSE` (GPL-2.0, déjà déclarée dans `composer.json`)
+
+**Impact projet :** aucun — remplacer l'URL SSH du `repositories` par l'URL HTTPS est facultatif,
+puis `composer update deefuse/wp-theme-core`.
+
 ## [2.2.1] — 2026-10-01
 
 ### Corrigé

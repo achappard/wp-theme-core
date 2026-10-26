@@ -15,31 +15,26 @@ Seule exception, qui n'est pas une feature : la page *Outils › Fonctionnalité
 
 ## Installation
 
-Dépôt privé : le déclarer dans le `composer.json` du **projet** (Composer ignore les `repositories`
-déclarés par une dépendance — seul le package racine compte).
+Le package n'est pas publié sur Packagist : déclarer le dépôt dans le `composer.json` du **projet**
+(Composer ignore les `repositories` déclarés par une dépendance — seul le package racine compte).
 
 ```json
 {
     "repositories": [
         {
             "type": "git",
-            "url": "git@github.com:achappard/wp-theme-core.git"
+            "url": "https://github.com/achappard/wp-theme-core.git"
         }
     ],
     "require": {
-        "deefuse/wp-theme-core": "^1.0"
+        "deefuse/wp-theme-core": "^2.2"
     }
 }
 ```
 
-> **`"type": "git"`, jamais `"vcs"`.** Avec une URL SSH, le driver `vcs`/GitHub inscrit dans le lock
-> une URL `dist` vers `api.github.com`, à laquelle une deploy key **n'a pas accès** : chaque
-> `composer install` d'un serveur essuierait un 404 avant de retomber sur le clone. `"no-api": true`
-> ne suffit pas à l'éviter — vérifié par installation à blanc.
-
-**Accès depuis un serveur** : une deploy key en lecture seule par serveur, ajoutée sur ce dépôt
-(GitHub en accepte plusieurs). C'est ce qui permet à `composer install` de tourner au déploiement,
-`vendor/` restant gitignoré côté projet.
+Le dépôt est public : l'URL HTTPS ne demande ni clé SSH ni token, en local comme sur un serveur.
+`"type": "git"` fait cloner le dépôt directement, sans passer par l'API GitHub et sa limite de
+requêtes anonymes.
 
 ---
 
@@ -266,3 +261,9 @@ Les modifier impose un `npm run build`, même en `npm run dev`.
 - [ ] *Outils › Fonctionnalités du thème* (admin) : vue Projet par défaut, vue Générique au clic ;
       chaque feature enregistrée présente une fois avec sa description ; page absente pour un Éditeur
 - [ ] Aucun notice avec `WP_DEBUG` activé
+
+---
+
+## Licence
+
+[GPL-2.0-or-later](LICENSE), comme WordPress.
